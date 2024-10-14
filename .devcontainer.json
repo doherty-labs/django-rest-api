@@ -1,0 +1,102 @@
+{
+  "name": "Django rest API",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "remote-dev",
+  "workspaceFolder": "/usr/src/app",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "mypy.configFile": "./mypy.ini",
+        "flake8.args": ["--config=${workspaceFolder}/.flake8"],
+        "autopep8.args": ["--config=${workspaceFolder}/pyproject.toml"],
+        "mypy.runUsingActiveInterpreter": true,
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.testing.pytestArgs": ["api"],
+        "python.testing.pytestEnabled": false,
+        "python.testing.unittestEnabled": true,
+        "emeraldwalk.runonsave": {
+          "autoClearConsole": true,
+          "commands": [
+            {
+              "match": "\\.py$",
+              "cmd": "cd ${workspaceFolder}/ && poetry run autopep8 ${file} && poetry run flake8 ${file} && poetry run isort ${file} && poetry run black ${file}"
+            },
+            {
+              "match": "\\.json$",
+              "cmd": "prettier -w ${file}"
+            },
+            {
+              "match": "\\.js$",
+              "cmd": "prettier -w ${file}"
+            },
+            {
+              "match": "\\.ts$",
+              "cmd": "prettier -w ${file}"
+            },
+            {
+              "match": "\\.tsx$",
+              "cmd": "prettier -w ${file}"
+            },
+            {
+              "match": "\\.css$",
+              "cmd": "prettier -w ${file}"
+            },
+            {
+              "match": "\\.scss$",
+              "cmd": "prettier -w ${file}"
+            },
+            {
+              "match": "\\.yaml$",
+              "cmd": "prettier -w ${file}"
+            },
+            {
+              "match": "\\.yml$",
+              "cmd": "prettier -w ${file}"
+            }
+          ]
+        },
+        "files.exclude": {
+          "**/__pycache__": true,
+          "**/*.pyc": true,
+          "**/*.pyo": true,
+          "**/.git": true,
+          "**/.mypy_cache": true,
+          "**/.pytest_cache": true,
+          "**/.venv": true,
+          "**/dist": true,
+          "**/node_modules/": true,
+          "**/.next/": true,
+          "**/.storybook/": true,
+          "**/next-env.d.ts": true
+        },
+        "files.watcherExclude": {
+          "**/.mypy_cache": true,
+          "**/.venv": true,
+          "**/docs/_build": true,
+          "**/node_modules/": true,
+          "**/.next/": true
+        }
+      },
+      "extensions": [
+        "ms-python.autopep8",
+        "ms-python.black-formatter",
+        "yardensachs.copy-python-path",
+        "ms-vscode-remote.remote-containers",
+        "ms-azuretools.vscode-docker",
+        "dbaeumer.vscode-eslint",
+        "ms-python.flake8",
+        "github.copilot",
+        "eamodio.gitlens",
+        "visualstudioexptteam.vscodeintellicode",
+        "ms-python.isort",
+        "ms-toolsai.jupyter",
+        "matangover.mypy",
+        "esbenp.prettier-vscode",
+        "ms-python.vscode-pylance",
+        "ms-python.python",
+        "charliermarsh.ruff",
+        "emeraldwalk.runonsave"
+      ]
+    }
+  }
+}

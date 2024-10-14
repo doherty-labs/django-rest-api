@@ -1,0 +1,22 @@
+{
+  "recommendations": [
+    "ms-python.autopep8",
+    "ms-python.black-formatter",
+    "yardensachs.copy-python-path",
+    "ms-vscode-remote.remote-containers",
+    "ms-azuretools.vscode-docker",
+    "dbaeumer.vscode-eslint",
+    "ms-python.flake8",
+    "github.copilot",
+    "eamodio.gitlens",
+    "visualstudioexptteam.vscodeintellicode",
+    "ms-python.isort",
+    "ms-toolsai.jupyter",
+    "matangover.mypy",
+    "esbenp.prettier-vscode",
+    "ms-python.vscode-pylance",
+    "ms-python.python",
+    "charliermarsh.ruff",
+    "emeraldwalk.runonsave"
+  ]
+}

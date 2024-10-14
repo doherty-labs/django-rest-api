@@ -1,0 +1,164 @@
+version: "3.9"
+services:
+  flower:
+    restart: always
+    build:
+      context: .
+      dockerfile: infrastructure/celery-flower/Dockerfile
+    volumes:
+      - ./api/django_project:/usr/src/app/django
+    depends_on:
+      - postgres
+      - redis
+      - pgadmin
+      - rabbitmq
+      - elastic
+    networks:
+      - django
+    ports:
+      - "5555:5555"
+  rest-api:
+    restart: always
+    build:
+      context: .
+      dockerfile: infrastructure/rest-api/Dockerfile
+    environment:
+      - GUNICORN_WORKERS=1
+    depends_on:
+      - celery-worker
+      - flower
+      - rabbitmq
+    volumes:
+      - ./api/django_project:/usr/src/app/django
+    networks:
+      - django
+    ports:
+      - "8000:8000"
+      - "8069:8069"
+  remote-dev:
+    restart: always
+    build:
+      context: .
+      dockerfile: infrastructure/remote-dev/Dockerfile
+    depends_on:
+      - celery-worker
+      - celery-scheduler
+      - flower
+      - rest-api
+      - postgres
+      - redis
+      - pgadmin
+      - rabbitmq
+      - elastic
+    volumes:
+      - ./:/usr/src/app
+    networks:
+      - django
+  celery-worker:
+    restart: always
+    build:
+      context: .
+      dockerfile: infrastructure/celery-worker/Dockerfile
+    volumes:
+      - ./api/django_project:/usr/src/app/django
+    depends_on:
+      - postgres
+      - redis
+      - pgadmin
+      - rabbitmq
+      - elastic
+    networks:
+      - django
+    ports:
+      - "8070:8069"
+  redis:
+    image: "redis:alpine"
+    networks:
+      - django
+  postgres:
+    container_name: postgres_container
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+      - ./infrastructure/init_dev_db.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - django
+    restart: unless-stopped
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    networks:
+      - django
+    restart: unless-stopped
+    depends_on:
+      - postgres
+  elastic:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.5.0
+    container_name: elasticsearch
+    deploy:
+      resources:
+        limits:
+          cpus: "4"
+          memory: "2g"
+    environment:
+      - "node.name=elasticsearch"
+      - "bootstrap.memory_lock=true"
+      - "discovery.type=single-node"
+      - "xpack.security.enabled=false"
+      - "ingest.geoip.downloader.enabled=false"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+      - 9300:9300
+    networks:
+      - django
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: "rabbitmq"
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbitmq:/var/lib/rabbitmq/
+      - rabbitmq:/var/log/rabbitmq
+    networks:
+      - django
+  celery-scheduler:
+    restart: always
+    build:
+      context: .
+      dockerfile: infrastructure/celery-scheduler/Dockerfile
+    volumes:
+      - ./api/django_project:/usr/src/app/django
+    depends_on:
+      - postgres
+      - redis
+      - pgadmin
+      - rabbitmq
+      - elastic
+    networks:
+      - django
+networks:
+  django:
+    driver: bridge
+
+volumes:
+  postgres:
+  pgadmin:
+  elasticsearch-data:
+  rabbitmq:

@@ -1,0 +1,80 @@
+{
+  "mypy.dmypyExecutable": "${workspaceFolder}/api/django_project/.venv/bin/dmypy",
+  "mypy.configFile": "./api/django_project/mypy.ini",
+  "flake8.args": ["--config=${workspaceFolder}/api/django_project/.flake8"],
+  "autopep8.args": [
+    "--config=${workspaceFolder}/api/django_project/pyproject.toml"
+  ],
+  "python.defaultInterpreterPath": "${workspaceFolder}/api/django_project/.venv/bin/python",
+  "python.testing.pytestEnabled": true,
+  "python.testing.unittestEnabled": false,
+  "emeraldwalk.runonsave": {
+    "autoClearConsole": true,
+    "commands": [
+      {
+        "match": "\\.py$",
+        "cmd": "cd ${workspaceFolder}/api/django_project/ && poetry run autopep8 ${file} && poetry run flake8 ${file} && poetry run isort ${file} && poetry run black ${file}"
+      },
+      {
+        "match": "\\.json$",
+        "cmd": "prettier -w ${file}"
+      },
+      {
+        "match": "\\.js$",
+        "cmd": "prettier -w ${file}"
+      },
+      {
+        "match": "\\.ts$",
+        "cmd": "prettier -w ${file}"
+      },
+      {
+        "match": "\\.tsx$",
+        "cmd": "prettier -w ${file}"
+      },
+      {
+        "match": "\\.css$",
+        "cmd": "prettier -w ${file}"
+      },
+      {
+        "match": "\\.scss$",
+        "cmd": "prettier -w ${file}"
+      },
+      {
+        "match": "\\.yaml$",
+        "cmd": "prettier -w ${file}"
+      },
+      {
+        "match": "\\.yml$",
+        "cmd": "prettier -w ${file}"
+      }
+    ]
+  },
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/*.pyc": true,
+    "**/*.pyo": true,
+    "**/.git": true,
+    "**/.mypy_cache": true,
+    "**/.pytest_cache": true,
+    "**/.venv": true,
+    "**/dist": true,
+    "**/node_modules/": true,
+    "**/.next/": true,
+    "**/.storybook/": true,
+    "**/next-env.d.ts": true
+  },
+  "files.watcherExclude": {
+    "**/.mypy_cache": true,
+    "**/.venv": true,
+    "**/docs/_build": true,
+    "**/node_modules/": true,
+    "**/.next/": true
+  },
+  "python.testing.autoTestDiscoverOnSaveEnabled": true,
+  "python.testing.cwd": "${workspaceFolder}/api/django_project/",
+  "python.testing.pytestArgs": [
+    "--rootdir=${workspaceFolder}/api/django_project/"
+  ],
+  "python.testing.debugPort": 8072,
+  "debugpy.debugJustMyCode": true
+}
