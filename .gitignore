@@ -10,3 +10,4 @@ staticfiles/
 coverage.xml
 .coverage
 node_modules/
+.env

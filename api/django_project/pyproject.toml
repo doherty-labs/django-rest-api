@@ -78,7 +78,6 @@ opentelemetry-instrumentation-elasticsearch = "^0.48b0"
 opentelemetry-instrumentation-redis = "^0.48b0"
 opentelemetry-instrumentation-psycopg2 = "^0.48b0"
 opentelemetry-instrumentation-asgi = "^0.48b0"
-hvac = "^2.3.0"
 
 [tool.poetry.dev-dependencies]
 

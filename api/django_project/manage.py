@@ -6,14 +6,13 @@ from ast import literal_eval
 
 from opentelemetry.instrumentation.django import DjangoInstrumentor
 from opentelemetry.instrumentation.elasticsearch import ElasticsearchInstrumentor
-from opentelemetry.instrumentation.psycopg2 import Psycopg2Instrumentor
 from opentelemetry.instrumentation.redis import RedisInstrumentor
 
 DEBUG = literal_eval(os.environ.get("DEBUG_MODE", "True"))
 
 
 def initialize_debugger():
-    if DEBUG and not os.getenv("RUN_MAIN"):
+    if DEBUG:
         try:
             import debugpy
 
@@ -26,7 +25,6 @@ def initialize_opentelemetry():
     DjangoInstrumentor().instrument(is_sql_commentor_enabled=True)
     ElasticsearchInstrumentor().instrument()
     RedisInstrumentor().instrument()
-    Psycopg2Instrumentor().instrument(enable_commenter=True, commenter_options={})
 
 
 def main():
@@ -45,4 +43,5 @@ def main():
 
 if __name__ == "__main__":
     initialize_debugger()
+    initialize_opentelemetry()
     main()

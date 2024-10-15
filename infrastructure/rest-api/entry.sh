@@ -2,9 +2,9 @@
 set -e
 cd ./django
 rm -rf ./staticfiles
-python manage.py collectstatic --noinput
-if [ "$DJANGO_HOT_RELOAD" = "true" ]
+if [ "$DEBUG_MODE" = "True" ]
 then
+    python manage.py collectstatic --noinput
     python manage.py migrate
     exec python manage.py runserver 0.0.0.0:8000
 else

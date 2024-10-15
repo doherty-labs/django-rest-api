@@ -17,6 +17,10 @@ from pathlib import Path
 import structlog
 from opentelemetry import trace
 
+from rest_api.services.hcp import HcpVaultSecrets
+
+SECRETS = HcpVaultSecrets().get_secret()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -252,8 +256,6 @@ MIXPANEL_TOKEN = os.environ.get("MIXPANEL_TOKEN", "")
 IS_PRODUCTION = os.environ.get("DD_ENV") == "prod"
 IS_QA = os.environ.get("DD_ENV") == "qa"
 
-HCP_ROLE_ID = os.environ.get("HCP_ROLE_ID", "")
-HCP_SECRET_ID = os.environ.get("HCP_SECRET_ID", "")
 
 JWT_AUTH = {
     "JWT_PAYLOAD_GET_USERNAME_HANDLER": "django_project.auth_utils.jwt_get_username_from_payload_handler",
