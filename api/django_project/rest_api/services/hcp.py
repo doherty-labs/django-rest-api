@@ -1,5 +1,6 @@
 import logging
 import os
+from functools import cache
 
 import requests
 
@@ -34,6 +35,7 @@ class HcpVaultSecrets:
         response.raise_for_status()
         return response.json()["access_token"]
 
+    @cache
     def get_secret(self) -> dict:
         token = self.get_token()
         headers = {
