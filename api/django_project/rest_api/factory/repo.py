@@ -8,7 +8,6 @@ from rest_api.modules.cdn_storage import (
 from rest_api.modules.es_module import EsModule, TestEsModule
 from rest_api.modules.geo import GeoModule, TestGeoModule
 from rest_api.modules.mixpanel import MixpanelModule, TestMixpanelModule
-from rest_api.modules.nylas import NylasModule, TestNylasModule
 from rest_api.modules.object_storage import ObjectStorageModule, TestObjectStorageModule
 from rest_api.modules.redis_module import RedisModule, TestRedisModule
 from rest_api.modules.sendgrid import EmailModule, TestEmailModule
@@ -22,7 +21,6 @@ InstanceInjector = Injector(
         GeoModule,
         ObjectStorageModule,
         CdnObjectStorageModule,
-        NylasModule,
         EmailModule,
         StripeModule,
         SMSModule,
@@ -38,7 +36,6 @@ TestInjector = Injector(
         TestGeoModule,
         TestObjectStorageModule,
         TestCdnObjectStorageModule,
-        TestNylasModule,
         TestEmailModule,
         TestStripeModule,
         TestSMSModule,
