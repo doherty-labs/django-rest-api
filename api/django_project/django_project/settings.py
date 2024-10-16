@@ -29,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-p9s3h@$1k6gs4uj!qyp$^9f6nttydour71(cq5=83ti(j1r*s4"
+SECRET_KEY = SECRETS.get("django_secret_key", "")
 TESTING = "test" in sys.argv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = literal_eval(os.environ.get("DEBUG_MODE", "True"))
@@ -107,20 +107,20 @@ ASGI_APPLICATION = "django_project.asgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("DATABASE_NAME", "maindb"),
-        "USER": os.environ.get("DATABASE_USER", "admin_user"),
-        "PASSWORD": os.environ.get("DATABASE_PASSWORD", "password123*"),
-        "HOST": os.environ.get("DATABASE_HOST", "postgres"),
-        "PORT": os.environ.get("DATABASE_PORT", "5432"),
+        "NAME": SECRETS.get("pg_dbname", ""),
+        "USER": SECRETS.get("pg_username", ""),
+        "PASSWORD": SECRETS.get("pg_password", ""),
+        "HOST": SECRETS.get("pg_host", ""),
+        "PORT": SECRETS.get("pg_port", ""),
         "OPTIONS": {"sslmode": "require"} if not DEBUG else {},
     }
 }
 
 ELASTIC_SEARCH = {
-    "host": os.environ.get("ELASTIC_SEARCH_HOST", "elastic"),
+    "host": SECRETS.get("elastic_search_url", ""),
     "port": 9200,
-    "user": os.environ.get("ELASTIC_SEARCH_USER", ""),
-    "password": os.environ.get("ELASTIC_SEARCH_PASSWORD", ""),
+    "user": SECRETS.get("elastic_search_username", ""),
+    "password": SECRETS.get("elastic_search_password", ""),
 }
 
 # Password validation
@@ -168,13 +168,8 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-CELERY_BROKER_URL = os.environ.get(
-    "CELERY_BROKER_URL", "amqp://guest:guest@rabbitmq:5672/"
-)
-CELERY_RESULT_BACKEND = os.environ.get(
-    "CELERY_RESULT_URL",
-    "redis://localhost:6379/0",
-)
+CELERY_BROKER_URL = SECRETS.get("celery_broker_url", "")
+CELERY_RESULT_BACKEND = SECRETS.get("redis_url", "")
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_TIMEZONE = "UTC"
@@ -187,7 +182,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [(os.environ.get("CHANNELS_URLS", "redis://localhost:6379/0"))],
+            "hosts": [(SECRETS.get("redis_url", ""))],
         },
     },
 }
@@ -195,7 +190,7 @@ CHANNEL_LAYERS = {
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": os.environ.get("CHANNELS_URLS", "redis://localhost:6379/0"),
+        "LOCATION": SECRETS.get("redis_url", ""),
     }
 }
 
@@ -210,48 +205,40 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 50,
 }
 
-GMAPS_API_KEY = os.environ.get("GMAPS_API_KEY", "")
+GMAPS_API_KEY = SECRETS.get("gmaps_api_key", "")
 
-BUCKET_NAME = os.environ.get("BUCKET_NAME", "")
-BUCKET_KEY = os.environ.get("BUCKET_KEY", "")
-BUCKET_SECRET = os.environ.get("BUCKET_SECRET", "")
-BUCKET_ENDPOINT = "https://" + os.environ.get("BUCKET_ENDPOINT", "")
-BUCKET_REGION = os.environ.get("BUCKET_REGION", "uk")
+BUCKET_NAME = SECRETS.get("bucket_name", "")
+BUCKET_KEY = SECRETS.get("bucket_access_key", "")
+BUCKET_SECRET = SECRETS.get("bucket_secret_key", "")
+BUCKET_ENDPOINT = "https://" + SECRETS.get("bucket_endpoint", "")
+BUCKET_REGION = SECRETS.get("bucket_region", "")
 
 
-CDN_BUCKET_NAME = os.environ.get("CDN_BUCKET_NAME", "")
-CDN_BUCKET_KEY = os.environ.get("CDN_BUCKET_KEY", "")
-CDN_BUCKET_SECRET = os.environ.get("CDN_BUCKET_SECRET", "")
-CDN_BUCKET_ENDPOINT = "https://" + os.environ.get("CDN_BUCKET_ENDPOINT", "")
-CDN_BUCKET_REGION = os.environ.get("CDN_BUCKET_REGION", "uk")
+CDN_BUCKET_NAME = SECRETS.get("cdn_bucket_name", "")
+CDN_BUCKET_KEY = SECRETS.get("cdn_bucket_access_key", "")
+CDN_BUCKET_SECRET = SECRETS.get("cdn_bucket_secret_key", "")
+CDN_BUCKET_ENDPOINT = "https://" + SECRETS.get("cdn_bucket_endpoint", "")
+CDN_BUCKET_REGION = SECRETS.get("cdn_bucket_region", "")
 
 
 LOGIN_URL = "/admin/login/"
-AUTH0_DOMAIN = os.environ.get("AUTH_DOMAIN", "")
-AUTH0_IDENTIFIER = os.environ.get("AUTH_IDENTIFIER", "")
+AUTH0_DOMAIN = SECRETS.get("auth_domain", "")
+AUTH0_IDENTIFIER = SECRETS.get("auth_identifier", "")
 
-AUTH0_MERCHANT_APP_CLIENT_ID = os.environ.get("AUTH_MERCHANT_APP_CLIENT_ID", "")
-AUTH0_STOREFRONT_APP_CLIENT_ID = os.environ.get("AUTH_STOREFRONT_APP_CLIENT_ID", "")
+AUTH0_DATABASE_CONNECTION_ID = SECRETS.get("auth_database_connection_id", "")
+AUTH0_GOOGLE_CONNECTION_ID = SECRETS.get("auth_google_connection_id", "")
+AUTH0_REST_API_CLIENT_ID = SECRETS.get("auth_rest_api_client_id", "")
+AUTH0_REST_API_CLIENT_SECRET = SECRETS.get("auth_rest_api_client_secret", "")
 
-AUTH0_MERCHANT_ROLE_ID = os.environ.get("AUTH_MERCHANT_ROLE_ID", "")
-AUTH0_CUSTOMER_ROLE_ID = os.environ.get("AUTH_CUSTOMER_ROLE_ID", "")
+SENDGRID_API_KEY = SECRETS.get("sendgrid_api_key", "")
 
-AUTH0_DATABASE_CONNECTION_ID = os.environ.get("AUTH_DATABASE_CONNECTION_ID", "")
-AUTH0_GOOGLE_CONNECTION_ID = os.environ.get("AUTH_GOOGLE_CONNECTION_ID", "")
-AUTH0_REST_API_CLIENT_ID = os.environ.get("AUTH_REST_API_CLIENT_ID", "")
-AUTH0_REST_API_CLIENT_SECRET = os.environ.get("AUTH_REST_API_CLIENT_SECRET", "")
+TWILIO_ACCOUNT_SID = SECRETS.get("twilio_account_sid", "")
+TWILIO_AUTH_TOKEN = SECRETS.get("twilio_auth_token", "")
 
-NYLAS_CLIENT_ID = os.environ.get("NYLAS_CLIENT_ID", "")
-NYLAS_CLIENT_SECRET = os.environ.get("NYLAS_CLIENT_SECRET", "")
-SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY", "")
+STRIPE_API_KEY = SECRETS.get("stripe_api_key", "")
+STRIPE_WEBHOOK_SECRET = SECRETS.get("stripe_webhook_secret", "")
 
-TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID", "")
-TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN", "")
-
-STRIPE_API_KEY = os.environ.get("STRIPE_API_KEY", "")
-STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
-
-MIXPANEL_TOKEN = os.environ.get("MIXPANEL_TOKEN", "")
+MIXPANEL_TOKEN = SECRETS.get("mixpanel_token", "")
 
 IS_PRODUCTION = os.environ.get("DD_ENV") == "prod"
 IS_QA = os.environ.get("DD_ENV") == "qa"

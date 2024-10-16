@@ -5,9 +5,7 @@ services:
     build:
       context: .
       dockerfile: infrastructure/celery-flower/Dockerfile
-    env_file:
-      - path: .env
-        required: true
+    env_file: .env
     volumes:
       - ./api/django_project:/usr/src/app/django
     depends_on:
@@ -25,9 +23,7 @@ services:
     build:
       context: .
       dockerfile: infrastructure/rest-api/Dockerfile
-    env_file:
-      - path: .env
-        required: true
+    env_file: .env
     depends_on:
       - celery-worker
       - flower
@@ -41,9 +37,7 @@ services:
       - "8069:8069"
   remote-dev:
     restart: always
-    env_file:
-      - path: .env
-        required: true
+    env_file: .env
     build:
       context: .
       dockerfile: infrastructure/remote-dev/Dockerfile
@@ -66,9 +60,7 @@ services:
     build:
       context: .
       dockerfile: infrastructure/celery-worker/Dockerfile
-    env_file:
-      - path: .env
-        required: true
+    env_file: .env
     volumes:
       - ./api/django_project:/usr/src/app/django
     depends_on:
@@ -150,9 +142,7 @@ services:
       - django
   celery-scheduler:
     restart: always
-    env_file:
-      - path: .env
-        required: true
+    env_file: .env
     build:
       context: .
       dockerfile: infrastructure/celery-scheduler/Dockerfile

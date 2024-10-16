@@ -2,7 +2,6 @@ from urllib.parse import urlsplit
 
 from auth0.v3.authentication import Database
 from auth0.v3.authentication.get_token import GetToken
-from auth0.v3.exceptions import Auth0Error
 from auth0.v3.management.organizations import Organizations
 from auth0.v3.management.users import Users
 from auth0.v3.management.users_by_email import UsersByEmail
@@ -17,7 +16,7 @@ class Auth0Service:
 
     rest_api_client_id = settings.AUTH0_REST_API_CLIENT_ID
     rest_api_client_secret = settings.AUTH0_REST_API_CLIENT_SECRET
-    rest_api_audience = "https://{}/api/v2/".format(domain_host)
+    rest_api_audience = f"https://{domain_host}/api/v2/"
 
     def get_token(self) -> GetToken:
         return GetToken(domain=self.domain_host)
@@ -55,11 +54,7 @@ class Auth0Service:
                         {
                             "connection_id": settings.AUTH0_DATABASE_CONNECTION_ID,
                             "assign_membership_on_login": False,
-                        },
-                        {
-                            "connection_id": settings.AUTH0_GOOGLE_CONNECTION_ID,
-                            "assign_membership_on_login": False,
-                        },
+                        }
                     ],
                 }
             )
@@ -75,41 +70,8 @@ class Auth0Service:
         if roles:
             self.get_users().add_roles(auth0_user_id, roles)
 
-    def signup_consumer(self, email: str, password: str) -> str:
-        user_id: str = ""
-        try:
-            signup_req = self.get_database().signup(
-                email=email,
-                password=password,
-                connection="Username-Password-Authentication",
-                client_id=settings.AUTH0_STOREFRONT_APP_CLIENT_ID,
-            )
-            user_id = "auth0|" + signup_req.get("_id")
-            self.get_database().change_password(
-                client_id=settings.AUTH0_STOREFRONT_APP_CLIENT_ID,
-                connection="Username-Password-Authentication",
-                email=email,
-            )
-        except Auth0Error:
-            user_id = (
-                self.get_users_by_email()
-                .search_users_by_email(email=email)[0]
-                .get("user_id")
-            )
-
-        user_id = user_id.replace("|", "auth0.")
-        return user_id
-
     def delete_user(self, user_id: str):
         return self.get_users().delete(user_id)
 
     def delete_org(self, id: str):
         return self.get_org().delete_organization(id)
-
-    def assign_consumer_role(self, id: str):
-        user_id = id.replace(".", "|")
-        return self.get_users().add_roles(user_id, [settings.AUTH0_CUSTOMER_ROLE_ID])
-
-    def assign_merchant_role(self, id: str):
-        user_id = id.replace(".", "|")
-        return self.get_users().add_roles(user_id, [settings.AUTH0_MERCHANT_ROLE_ID])
