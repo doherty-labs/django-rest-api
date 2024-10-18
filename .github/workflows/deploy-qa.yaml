@@ -23,18 +23,6 @@ jobs:
       matrix:
         include:
           - {
-              dockerfile: "./infrastructure/storefront-webapp/Dockerfile",
-              tag: "qa-storefront-webapp",
-            }
-          - {
-              dockerfile: "./infrastructure/ops-webapp/Dockerfile",
-              tag: "qa-ops-webapp",
-            }
-          - {
-              dockerfile: "./infrastructure/merchant-webapp/Dockerfile",
-              tag: "qa-merchant-webapp",
-            }
-          - {
               dockerfile: "./infrastructure/rest-api/Dockerfile",
               tag: "qa-rest-api",
             }
