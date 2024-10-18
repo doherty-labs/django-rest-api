@@ -59,6 +59,7 @@ jobs:
           sudo mkdir /logs/
           sudo chmod 777 /logs/
           poetry install
+          playwright install
       - name: Linting
         working-directory: ./api/django_project/
         env:
@@ -79,7 +80,7 @@ jobs:
         run: |
           python manage.py makemigrations --check --dry-run
           coverage3 erase
-          coverage3 run --source=rest_api --omit=*/migrations/*,*/modules/*,*/factory/*,*/tests/*,*/e2e/*,*/schemas/*,*/services/*,*/serializers/*,*/management/*,admin.py,apps.py,channels.py -m pytest --ds=django_project.settings --ignore-glob=**rest_api/e2e/**
+          coverage3 run --source=rest_api --omit=*/migrations/*,*/modules/*,*/factory/*,*/tests/*,*/e2e/*,*/schemas/*,*/services/*,*/serializers/*,*/management/*,admin.py,apps.py,channels.py -m pytest --ds=django_project.settings_test --ignore-glob=**rest_api/e2e/**
           coverage3 report -m
           coverage3 xml
       - name: Upload coverage reports to Codecov
