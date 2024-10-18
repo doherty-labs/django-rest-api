@@ -1,0 +1,44 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: "{{ .Values.service.name }}"
+  namespace: "{{ .Values.service.namespace }}"
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/target-utilization-percentage: "{{ .Values.service.autoscaling.targetUtilizationPercentage }}"
+        autoscaling.knative.dev/min-scale: "{{ .Values.service.autoscaling.minScale }}"
+        autoscaling.knative.dev/max-scale: "{{ .Values.service.autoscaling.maxScale }}"
+        external-dns.alpha.kubernetes.io/hostname: "{{ .Values.service.hostName }}"
+    spec:
+      containerConcurrency: {{ .Values.service.autoscaling.concurrency }}
+      volumes:
+        - name: rest-api-logs
+          hostPath:
+            path: /var/logs/rest-api/
+      containers:
+        - image: "{{ .Values.service.image.repository }}:{{ .Values.service.image.tag }}"
+          volumeMounts:
+            - name: rest-api-logs
+              mountPath: /logs/
+          ports:
+            - containerPort: {{ .Values.service.port }}
+          readinessProbe:
+            httpGet:
+              path: /admin/login/?next=/admin/
+              port: {{ .Values.service.port }}
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          livenessProbe:
+            httpGet:
+              path: /admin/login/?next=/admin/
+              port: {{ .Values.service.port }}
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          {{- with .Values.service.resources }}
+            resources:
+              {{- toYaml . | nindent 6 }}
+          {{- end }}
+          env:
+            {{- include "Values.service.env" . | nindent 6 }}

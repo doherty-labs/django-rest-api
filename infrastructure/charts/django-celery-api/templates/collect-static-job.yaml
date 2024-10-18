@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: collectstatic
+spec:
+  template:
+    spec:
+      containers:
+        - name: collectstatic-container
+          image: "{{ .Values.service.image.repository }}:{{ .Values.service.image.tag }}"
+          command: ["python", "manage.py", "collectstatic"]
+          {{- with .Values.service.resources }}
+            resources:
+              {{- toYaml . | nindent 6 }}
+          {{- end }}
+          workingDir: /usr/src/app/django
+          env:
+            {{- include ".Values.jobs.collectstatic.env" . | nindent 6 }}
+      restartPolicy: Never
+  backoffLimit: 1

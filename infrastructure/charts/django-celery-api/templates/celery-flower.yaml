@@ -1,0 +1,44 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: "{{ .Values.celery.flower.name }}"
+  namespace: "{{ .Values.celery.flower.namespace }}"
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/target-utilization-percentage: "{{ .Values.celery.flower.autoscaling.targetUtilizationPercentage }}"
+        autoscaling.knative.dev/min-scale: "{{ .Values.celery.flower.autoscaling.minScale }}"
+        autoscaling.knative.dev/max-scale: "{{ .Values.celery.flower.autoscaling.maxScale }}"
+        external-dns.alpha.kubernetes.io/hostname: "{{ .Values.celery.flower.hostName }}"
+    spec:
+      containerConcurrency: {{ .Values.celery.flower.autoscaling.concurrency }}
+      volumes:
+        - name: rest-api-logs
+          hostPath:
+            path: /var/logs/rest-api/
+      containers:
+        - image: "{{ .Values.celery.flower.image.repository }}:{{ .Values.celery.flower.image.tag }}"
+          volumeMounts:
+            - name: rest-api-logs
+              mountPath: /logs/
+          ports:
+            - containerPort: {{ .Values.celery.flower.port }}
+          readinessProbe:
+            httpGet:
+              path: /admin/login/?next=/admin/
+              port: {{ .Values.celery.flower.port }}
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          livenessProbe:
+            httpGet:
+              path: /admin/login/?next=/admin/
+              port: {{ .Values.celery.flower.port }}
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          {{- with .Values.celery.flower.resources }}
+            resources:
+              {{- toYaml . | nindent 6 }}
+          {{- end }}
+          env:
+            {{- include ".Values.celery.flower.env" . | nindent 6 }}

@@ -1,0 +1,81 @@
+name: Deploy QA
+
+concurrency:
+  group: ${{ github.ref }}
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["**"]
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  push_docker_image_to_github_packages:
+    name: Build and push docker images
+    runs-on: ubuntu-latest
+    environment: qa
+    strategy:
+      matrix:
+        include:
+          - {
+              dockerfile: "./infrastructure/storefront-webapp/Dockerfile",
+              tag: "qa-storefront-webapp",
+            }
+          - {
+              dockerfile: "./infrastructure/ops-webapp/Dockerfile",
+              tag: "qa-ops-webapp",
+            }
+          - {
+              dockerfile: "./infrastructure/merchant-webapp/Dockerfile",
+              tag: "qa-merchant-webapp",
+            }
+          - {
+              dockerfile: "./infrastructure/rest-api/Dockerfile",
+              tag: "qa-rest-api",
+            }
+          - {
+              dockerfile: "./infrastructure/celery-worker/Dockerfile",
+              tag: "qa-celery-worker",
+            }
+          - {
+              dockerfile: "./infrastructure/celery-flower/Dockerfile",
+              tag: "qa-celery-flower",
+            }
+          - {
+              dockerfile: "./infrastructure/celery-scheduler/Dockerfile",
+              tag: "qa-celery-scheduler",
+            }
+    steps:
+      - uses: actions/checkout@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ secrets.DOCKER_REG_URL }}
+          username: ${{ secrets.DOCKER_REG_USERNAME }}
+          password: ${{ secrets.DOCKER_REG_PASSWORD }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ secrets.DOCKER_REG_URL }}/${{ secrets.DOCKER_REG_NAME }}/${{ matrix.tag }}
+          tags: |
+            type=sha
+      - name: Set outputs
+        id: vars
+        run: echo "sha_short=sha-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          file: ${{ matrix.dockerfile }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            NEXT_PUBLIC_DATADOG_VERSION=${{ steps.vars.outputs.sha_short }}
+            NODE_ENV=test

@@ -1,0 +1,150 @@
+service:
+  name: rest-api
+  namespace: default
+  hostName: ""
+  port: 8000
+  image:
+    repository: ""
+    tag: ""
+  autoscaling:
+    minScale: 1
+    maxScale: 10
+    targetUtilizationPercentage: 60
+    concurrency: 4
+  env:
+    - name: DD_ENV
+      value: ""
+    - name: DD_SERVICE
+      value: rest-api
+    - name: DD_AGENT_HOST
+      value: datadog-agent
+    - name: DD_VERSION
+      value: ""
+    - name: DEBUG_MODE
+      value: "False"
+    - name: GUNICORN_WORKERS
+      value: 4
+  resources:
+    requests:
+      cpu: "2000m"
+      memory: "4Gi"
+
+celery:
+  scheduler:
+    name: celery-scheduler
+    namespace: default
+    image:
+      repository: ""
+      tag: ""
+    autoscaling:
+      minScale: 1
+      maxScale: 10
+      queueLengthTarget: 10
+      queueName: celery
+    env:
+      - name: DD_ENV
+        value: ""
+      - name: DD_SERVICE
+        value: celery-scheduler
+      - name: DD_AGENT_HOST
+        value: datadog-agent
+      - name: DD_VERSION
+        value: ""
+      - name: DEBUG_MODE
+        value: "False"
+    resources:
+      requests:
+        cpu: "2000m"
+        memory: "4Gi"
+  flower:
+    name: flower
+    namespace: default
+    hostName: ""
+    port: 8000
+    image:
+      repository: ""
+      tag: ""
+    autoscaling:
+      minScale: 1
+      maxScale: 10
+      targetUtilizationPercentage: 60
+      concurrency: 1
+    env:
+      - name: DD_ENV
+        value: ""
+      - name: DD_SERVICE
+        value: celery-flower
+      - name: DD_AGENT_HOST
+        value: datadog-agent
+      - name: DD_VERSION
+        value: ""
+      - name: DEBUG_MODE
+        value: "False"
+    resources:
+      requests:
+        cpu: "2000m"
+        memory: "4Gi"
+  worker:
+    name: celery-worker
+    namespace: default
+    image:
+      repository: ""
+      tag: ""
+    autoscaling:
+      minScale: 1
+      maxScale: 10
+      queueLengthTarget: 10
+      queueName: celery
+    env:
+      - name: DD_ENV
+        value: ""
+      - name: DD_SERVICE
+        value: celery-worker
+      - name: DD_AGENT_HOST
+        value: datadog-agent
+      - name: DD_VERSION
+        value: ""
+      - name: DEBUG_MODE
+        value: "False"
+    resources:
+      requests:
+        cpu: "2000m"
+        memory: "4Gi"
+
+jobs:
+  migrate:
+    env:
+      - name: DD_ENV
+        value: ""
+      - name: DD_SERVICE
+        value: migrate-job
+      - name: DD_AGENT_HOST
+        value: datadog-agent
+      - name: DD_VERSION
+        value: ""
+      - name: DEBUG_MODE
+        value: "False"
+  elasticmigrate:
+    env:
+      - name: DD_ENV
+        value: ""
+      - name: DD_SERVICE
+        value: elasticmigrate-job
+      - name: DD_AGENT_HOST
+        value: datadog-agent
+      - name: DD_VERSION
+        value: ""
+      - name: DEBUG_MODE
+        value: "False"
+  collectstatic:
+    env:
+      - name: DD_ENV
+        value: ""
+      - name: DD_SERVICE
+        value: collectstatic-job
+      - name: DD_AGENT_HOST
+        value: datadog-agent
+      - name: DD_VERSION
+        value: ""
+      - name: DEBUG_MODE
+        value: "False"

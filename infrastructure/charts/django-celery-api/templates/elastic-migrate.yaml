@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: elastic-migrate
+spec:
+  template:
+    spec:
+      containers:
+        - name: elastic-migrate-container
+          image: "{{ .Values.service.image.repository }}:{{ .Values.service.image.tag }}"
+          command: ["python", "manage.py", "elasticmigrate"]
+          {{- with .Values.service.resources }}
+            resources:
+              {{- toYaml . | nindent 6 }}
+          {{- end }}
+          workingDir: /usr/src/app/django
+          env:
+            {{- include ".Values.jobs.elasticmigrate.env" . | nindent 6 }}
+      restartPolicy: Never
+  backoffLimit: 1
