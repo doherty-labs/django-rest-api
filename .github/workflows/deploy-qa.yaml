@@ -1,7 +1,8 @@
 name: Deploy QA
 
 concurrency:
-  group: ${{ github.ref }}
+  group: main-qa-deploy
+  cancel-in-progress: false
 
 on:
   push:
