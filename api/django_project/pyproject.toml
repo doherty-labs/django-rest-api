@@ -65,7 +65,6 @@ types-pytz = "^2024.1.0.20240417"
 mixpanel = "^4.10.1"
 daphne = "^4.1.2"
 polyfactory = "^2.16.0"
-pytest-playwright = "^0.5.0"
 flake8-custom-import-rules = "^1.1.4"
 uvicorn = "^0.31.1"
 uvicorn-worker = "^0.2.0"
@@ -78,7 +77,8 @@ opentelemetry-instrumentation-elasticsearch = "^0.48b0"
 opentelemetry-instrumentation-redis = "^0.48b0"
 opentelemetry-instrumentation-psycopg2 = "^0.48b0"
 opentelemetry-instrumentation-asgi = "^0.48b0"
-gevent = "^24.10.2"
+playwright = "^1.47.0"
+pytest-playwright = "^0.5.2"
 
 [tool.poetry.dev-dependencies]
 
