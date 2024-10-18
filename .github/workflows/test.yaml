@@ -59,7 +59,6 @@ jobs:
           sudo mkdir /logs/
           sudo chmod 777 /logs/
           poetry install
-          playwright install
       - name: Linting
         working-directory: ./api/django_project/
         env:
