@@ -83,9 +83,3 @@ jobs:
           coverage3 run --source=rest_api --omit=*/migrations/*,*/modules/*,*/factory/*,*/tests/*,*/e2e/*,*/schemas/*,*/services/*,*/serializers/*,*/management/*,admin.py,apps.py,channels.py -m pytest --ds=django_project.settings_test --ignore-glob=**rest_api/e2e/**
           coverage3 report -m
           coverage3 xml
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-          files: ./api/django_project/coverage.xml
-          slug: doherty-labs/clientclose
