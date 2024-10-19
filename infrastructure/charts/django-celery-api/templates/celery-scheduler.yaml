@@ -26,17 +26,19 @@ spec:
         - name: celery-scheduler-docker-image
           image: "{{ .Values.celery.scheduler.image.repository }}:{{ .Values.celery.scheduler.image.tag }}"
           imagePullPolicy: IfNotPresent
+          {{- with  .Values.celery.scheduler.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.celery.scheduler.env }}
+          env:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: celery-logs
               mountPath: /logs/
-          {{- with .Values.service.resources }}
-            resources:
-              {{- toYaml . | nindent 6 }}
-          {{- end }}
           readinessProbe:
             exec:
               command: ["python", "./django/django_project/celery_readiness.py"]
             initialDelaySeconds: 120
             periodSeconds: 300
-          env:
-            {{- include ".Values.celery.scheduler.env" . | nindent 6 }}

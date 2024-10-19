@@ -36,9 +36,11 @@ spec:
               port: {{ .Values.celery.flower.port }}
             initialDelaySeconds: 60
             periodSeconds: 30
-          {{- with .Values.celery.flower.resources }}
-            resources:
-              {{- toYaml . | nindent 6 }}
+          {{- with  .Values.celery.flower.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
           {{- end }}
+          {{- with .Values.celery.flower.env }}
           env:
-            {{- include ".Values.celery.flower.env" . | nindent 6 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}

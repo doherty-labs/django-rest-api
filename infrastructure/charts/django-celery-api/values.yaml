@@ -106,45 +106,13 @@ celery:
         value: ""
       - name: DEBUG_MODE
         value: "False"
+      - name: CELERY_BROKER_URL
+        valueFrom:
+          secretKeyRef:
+            name: app-auth
+            key: celery_broker_url
+            optional: false
     resources:
       requests:
         cpu: "2000m"
         memory: "4Gi"
-
-jobs:
-  migrate:
-    env:
-      - name: DD_ENV
-        value: ""
-      - name: DD_SERVICE
-        value: migrate-job
-      - name: DD_AGENT_HOST
-        value: datadog-agent
-      - name: DD_VERSION
-        value: ""
-      - name: DEBUG_MODE
-        value: "False"
-  elasticmigrate:
-    env:
-      - name: DD_ENV
-        value: ""
-      - name: DD_SERVICE
-        value: elasticmigrate-job
-      - name: DD_AGENT_HOST
-        value: datadog-agent
-      - name: DD_VERSION
-        value: ""
-      - name: DEBUG_MODE
-        value: "False"
-  collectstatic:
-    env:
-      - name: DD_ENV
-        value: ""
-      - name: DD_SERVICE
-        value: collectstatic-job
-      - name: DD_AGENT_HOST
-        value: datadog-agent
-      - name: DD_VERSION
-        value: ""
-      - name: DEBUG_MODE
-        value: "False"

@@ -26,13 +26,17 @@ spec:
         - name: celery-worker-docker-image
           image: "{{ .Values.celery.worker.image.repository }}:{{ .Values.celery.worker.image.tag }}"
           imagePullPolicy: IfNotPresent
+          {{- with  .Values.celery.worker.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.celery.worker.env }}
+          env:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: celery-logs
               mountPath: /logs/
-          {{- with .Values.celery.worker.resources }}
-            resources:
-              {{- toYaml . | nindent 6 }}
-          {{- end }}
           readinessProbe:
             exec:
               command: ["python", "./django/django_project/celery_readiness.py"]
@@ -44,15 +48,7 @@ spec:
                 ["python", "./django/django_project/celery_worker_liveness.py"]
             initialDelaySeconds: 120
             periodSeconds: 60
-          env:
-            {{- include ".Values.celery.worker.env" . | nindent 6 }}
-            - name: CELERY_BROKER_URL
-              valueFrom:
-                secretKeyRef:
-                  name: app-auth
-                  key: celery_broker_url
-                  optional: false
-            
+
 ---
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject

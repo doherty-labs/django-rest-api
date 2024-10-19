@@ -9,12 +9,14 @@ spec:
         - name: django-migrate-container
           image: "{{ .Values.service.image.repository }}:{{ .Values.service.image.tag }}"
           command: ["python", "manage.py", "migrate"]
-          {{- with .Values.service.resources }}
-            resources:
-              {{- toYaml . | nindent 6 }}
+          {{- with  .Values.service.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.service.env }}
+          env:
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           workingDir: /usr/src/app/django
-          env:
-            {{- include ".Values.jobs.migrate.env" . | nindent 6 }}
       restartPolicy: Never
   backoffLimit: 1

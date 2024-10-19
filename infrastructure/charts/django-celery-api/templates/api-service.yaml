@@ -30,15 +30,17 @@ spec:
               port: {{ .Values.service.port }}
             initialDelaySeconds: 60
             periodSeconds: 30
+          {{- with .Values.service.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.service.env }}
+          env:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           livenessProbe:
             httpGet:
               path: /admin/login/?next=/admin/
               port: {{ .Values.service.port }}
             initialDelaySeconds: 60
             periodSeconds: 30
-          {{- with .Values.service.resources }}
-            resources:
-              {{- toYaml . | nindent 6 }}
-          {{- end }}
-          env:
-            {{- include "Values.service.env" . | nindent 6 }}
