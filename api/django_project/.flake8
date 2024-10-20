@@ -1,5 +1,2 @@
 [flake8]
 extend-ignore = E501,E999
-custom-restrictions =
-    rest_api.tests:rest_api.factory.repo.InstanceInjector
-    rest_api.tests:rest_api.services

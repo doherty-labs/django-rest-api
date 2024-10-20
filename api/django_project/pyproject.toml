@@ -5,7 +5,7 @@ description = ""
 authors = ["John Doherty <john.doherty@paragon-cloud.com>"]
 
 [tool.poetry.dependencies]
-python = ">=3.11,<=3.12"
+python = ">=3.11,<=3.13"
 Django = "^4.2.2"
 djangorestframework = "^3.14.0"
 Markdown = "^3.4.1"
@@ -64,7 +64,6 @@ types-pytz = "^2024.1.0.20240417"
 mixpanel = "^4.10.1"
 daphne = "^4.1.2"
 polyfactory = "^2.16.0"
-flake8-custom-import-rules = "^1.1.4"
 uvicorn = "^0.31.1"
 uvicorn-worker = "^0.2.0"
 opentelemetry-api = "^1.27.0"
