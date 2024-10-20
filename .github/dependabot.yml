@@ -9,3 +9,23 @@ updates:
     directory: "/api/django_project" # Location of package manifests
     schedule:
       interval: "weekly"
+  - package-ecosystem: "docker" # See documentation for possible values
+    directory: "/infrastructure/rest-api" # Location of package manifests
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "docker" # See documentation for possible values
+    directory: "/infrastructure/celery-worker" # Location of package manifests
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "docker" # See documentation for possible values
+    directory: "/infrastructure/celery-flower" # Location of package manifests
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "docker" # See documentation for possible values
+    directory: "/infrastructure/celery-scheduler" # Location of package manifests
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "docker"
+    directory: "/infrastructure/remote-dev"
+    schedule:
+      interval: "weekly"
