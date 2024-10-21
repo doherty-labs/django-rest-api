@@ -143,4 +143,4 @@ jobs:
       - name: Add Helm repository
         run: helm repo add doherty-labs https://doherty-labs.github.io/helm-charts/
       - name: Install Helm chart
-        run: helm upgrade --install django-rest-api-qa doherty-labs/django-celery-api -f ./infrastructure/helm-values.yaml
+        run: helm upgrade django-celery-api doherty-labs/django-celery-api -n default -f ./infrastructure/helm-values.yaml --install
