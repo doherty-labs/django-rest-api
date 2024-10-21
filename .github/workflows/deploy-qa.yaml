@@ -80,7 +80,7 @@ jobs:
         with:
           release: "django-celery-api"
           repo:: "https://doherty-labs.github.io/helm-charts/"
-          chart: "doherty-labs/django-celery-api"
+          chart: "django-celery-api"
           values: |
             service:
               name: rest-api
