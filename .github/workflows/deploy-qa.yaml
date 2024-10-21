@@ -150,6 +150,6 @@ jobs:
       - name: Search for Helm chart
         run: helm search repo doherty-labs
       - name: Update repo
-        run: helm repo update
+        run: helm repo update doherty-labs
       - name: Install Helm chart
-        run: helm install django-celery-api doherty-labs/django-celery-api -f ./infrastructure/helm-values.yaml
+        run: helm upgrade --install django-celery-api doherty-labs/django-celery-api -f ./infrastructure/helm-values.yaml
