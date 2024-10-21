@@ -35,8 +35,6 @@ COPY ./ /usr/src/app/
 
 WORKDIR /usr/src/app/api/django_project
 RUN poetry install
-RUN playwright install-deps
-RUN playwright install
 
 RUN npm install -g openapi-typescript@7.0.2
 
