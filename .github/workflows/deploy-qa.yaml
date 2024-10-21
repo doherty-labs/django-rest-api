@@ -47,7 +47,7 @@ jobs:
           password: ${{ secrets.DOCKER_REG_PASSWORD }}
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: ${{ secrets.DOCKER_REG_URL }}/${{ secrets.DOCKER_REG_NAME }}/${{ matrix.tag }}
           tags: |
