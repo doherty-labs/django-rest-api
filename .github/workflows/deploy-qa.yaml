@@ -73,6 +73,11 @@ jobs:
     environment: qa
     steps:
       - uses: actions/checkout@v3
+      - uses: azure/setup-helm@v4.2.0
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DOCKER_REG_PASSWORD }}
       - name: Save DigitalOcean kubeconfig with short-lived credentials
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 3600 django-rest-api-qa-kubernetes-cluster
       - name: Replace reg url
@@ -135,3 +140,7 @@ jobs:
           files: "./infrastructure/helm-values.yaml"
           search-text: "${FLOWER_HOSTNAME}"
           replacement-text: "flower-qa.dohertylabs.com"
+      - name: Add Helm repository
+        run: helm repo add dohertylabs https://dohertylabs.github.io/helm-charts
+      - name: Install Helm chart
+        run: helm upgrade --install django-rest-api-qa dohertylabs/django-rest-api -f ./infrastructure/helm-values.yaml
