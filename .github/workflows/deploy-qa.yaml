@@ -66,3 +66,90 @@ jobs:
           build-args: |
             NEXT_PUBLIC_DATADOG_VERSION=${{ steps.vars.outputs.sha_short }}
             NODE_ENV=test
+  deploy_k8:
+    needs: push_docker_image_to_github_packages
+    name: Deploy to Kubernetes
+    runs-on: ubuntu-latest
+    environment: qa
+    steps:
+      - uses: actions/checkout@v3
+      - name: Save DigitalOcean kubeconfig with short-lived credentials
+        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 3600 django-rest-api-qa-kubernetes-cluster
+      - name: "Deploy"
+        uses: "deliverybot/helm@v1"
+        with:
+          release: "django-celery-api"
+          repo:: "https://doherty-labs.github.io/helm-charts/"
+          chart: "doherty-labs/django-celery-api"
+          values: |
+            service:
+              name: rest-api
+              namespace: default
+              hostName: "api-qa.dohertylabs.com"
+              port: 8000
+              image:
+                repository: "${{ secrets.DOCKER_REG_URL }}/${{ secrets.DOCKER_REG_NAME }}/qa-rest-api"
+                tag: "${{ steps.vars.outputs.sha_short }}"
+              autoscaling:
+                minScale: 1
+                maxScale: 10
+                targetUtilizationPercentage: 60
+                concurrency: 4
+              env:
+                - name: GUNICORN_WORKERS
+                  value: 4
+              resources:
+                requests:
+                  cpu: "2000m"
+                  memory: "4Gi"
+
+            celery:
+              scheduler:
+                name: celery-scheduler
+                namespace: default
+                image:
+                  repository: "${{ secrets.DOCKER_REG_URL }}/${{ secrets.DOCKER_REG_NAME }}/qa-celery-scheduler"
+                  tag: "${{ steps.vars.outputs.sha_short }}"
+                resources:
+                  requests:
+                    cpu: "2000m"
+                    memory: "4Gi"
+              flower:
+                name: flower
+                namespace: default
+                hostName: "flower-qa.dohertylabs.com"
+                port: 8000
+                image:
+                  repository: "${{ secrets.DOCKER_REG_URL }}/${{ secrets.DOCKER_REG_NAME }}/qa-celery-flower"
+                  tag: "${{ steps.vars.outputs.sha_short }}"
+                autoscaling:
+                  minScale: 1
+                  maxScale: 10
+                  targetUtilizationPercentage: 60
+                  concurrency: 1
+                resources:
+                  requests:
+                    cpu: "2000m"
+                    memory: "4Gi"
+              worker:
+                name: celery-worker
+                namespace: default
+                image:
+                  repository: "${{ secrets.DOCKER_REG_URL }}/${{ secrets.DOCKER_REG_NAME }}/qa-celery-worker"
+                  tag: "${{ steps.vars.outputs.sha_short }}"
+                autoscaling:
+                  minScale: 1
+                  maxScale: 10
+                  queueLengthTarget: 10
+                  queueName: celery
+                env:
+                  - name: CELERY_BROKER_URL
+                    valueFrom:
+                      secretKeyRef:
+                        name: app-auth
+                        key: celery_broker_url
+                        optional: false
+                resources:
+                  requests:
+                    cpu: "2000m"
+                    memory: "4Gi"
