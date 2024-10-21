@@ -141,6 +141,6 @@ jobs:
           search-text: "${FLOWER_HOSTNAME}"
           replacement-text: "flower-qa.dohertylabs.com"
       - name: Add Helm repository
-        run: helm repo add dohertylabs https://dohertylabs.github.io/helm-charts
+        run: helm repo add doherty-labs https://doherty-labs.github.io/helm-charts/
       - name: Install Helm chart
-        run: helm upgrade --install django-rest-api-qa dohertylabs/django-rest-api -f ./infrastructure/helm-values.yaml
+        run: helm upgrade --install django-rest-api-qa doherty-labs/django-celery-api -f ./infrastructure/helm-values.yaml
