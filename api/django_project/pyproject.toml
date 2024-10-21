@@ -2,10 +2,10 @@
 name = "django_project"
 version = "0.1.0"
 description = ""
-authors = ["John Doherty <john.doherty@paragon-cloud.com>"]
+authors = ["John Doherty <john@dohertylabs.com>"]
 
 [tool.poetry.dependencies]
-python = ">=3.11,<=3.13"
+python = "^3.13"
 Django = "^4.2.2"
 djangorestframework = "^3.14.0"
 Markdown = "^3.4.1"
@@ -53,14 +53,11 @@ coverage = "^7.4.0"
 pytest-cov = "^4.1.0"
 pytest-django = "^4.7.0"
 structlog = "^24.1.0"
-nylas = "^6.0.1"
 stripe = "^11.1.1"
 django-money = "^3.4.1"
 twilio = "^9.0.2"
 croniter = "^3.0.3"
-types-croniter = "^2.0.0.20240321"
 inflection = "^0.5.1"
-types-pytz = "^2024.1.0.20240417"
 mixpanel = "^4.10.1"
 daphne = "^4.1.2"
 polyfactory = "^2.16.0"
@@ -74,8 +71,6 @@ opentelemetry-instrumentation-celery = "^0.48b0"
 opentelemetry-instrumentation-elasticsearch = "^0.48b0"
 opentelemetry-instrumentation-redis = "^0.48b0"
 opentelemetry-instrumentation-asgi = "^0.48b0"
-playwright = "^1.47.0"
-pytest-playwright = "^0.5.2"
 setuptools = "^75.2.0"
 
 [tool.poetry.dev-dependencies]

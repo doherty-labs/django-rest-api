@@ -23,6 +23,9 @@ RUN npm install --global yarn
 RUN npm install --global prettier
 RUN apt-get install nano -y
 RUN apt-get install vim -y
+
+RUN pip install --upgrade pip
+RUN pip install setuptools wheel
 RUN pip install "poetry==$POETRY_VERSION"
 RUN poetry config virtualenvs.create false
 

@@ -14,6 +14,8 @@ ENV PYTHONFAULTHANDLER=1 \
   PIP_DEFAULT_TIMEOUT=100 \
   POETRY_VERSION=1.4.1
 
+RUN pip install --upgrade pip
+RUN pip install setuptools wheel
 RUN pip install "poetry==$POETRY_VERSION"
 
 WORKDIR /usr/src/app
