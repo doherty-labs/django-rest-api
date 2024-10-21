@@ -140,7 +140,11 @@ jobs:
           files: "./infrastructure/helm-values.yaml"
           search-text: "${FLOWER_HOSTNAME}"
           replacement-text: "flower-qa.dohertylabs.com"
+      - name: Output Helm values
+        run: cat ./infrastructure/helm-values.yaml
       - name: Add Helm repository
         run: helm repo add doherty-labs https://doherty-labs.github.io/helm-charts/
+      - name: Search for Helm chart
+        run: helm search repo doherty-labs
       - name: Install Helm chart
-        run: helm upgrade django-celery-api doherty-labs/django-celery-api -n default -f ./infrastructure/helm-values.yaml --install
+        run: helm upgrade --install django-celery-api doherty-labs/django-celery-api -f ./infrastructure/helm-values.yaml
