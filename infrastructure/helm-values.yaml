@@ -1,0 +1,81 @@
+service:
+  name: rest-api
+  namespace: default
+  hostName: "${REST_API_HOSTNAME}"
+  port: 8000
+  image:
+    repository: "${DOCKER_REG_URL}/${DOCKER_REG_NAME}/${REST_API_IMAGE_NAME}"
+    tag: "${SHA_VERSION}"
+  autoscaling:
+    minScale: 1
+    maxScale: 10
+    targetUtilizationPercentage: 60
+    concurrency: 4
+  env:
+    - name: GUNICORN_WORKERS
+      value: 4
+    - name: DJANGO_SETTINGS_MODULE
+      value: "${DJANGO_SETTINGS_MODULE}"
+  resources:
+    requests:
+      cpu: "2000m"
+      memory: "4Gi"
+
+celery:
+  scheduler:
+    name: celery-scheduler
+    namespace: default
+    image:
+      repository: "${DOCKER_REG_URL}/${DOCKER_REG_NAME}/${CELERY_SCHEDULER_IMAGE_NAME}"
+      tag: "${SHA_VERSION}"
+    env:
+      - name: DJANGO_SETTINGS_MODULE
+        value: "${DJANGO_SETTINGS_MODULE}"
+    resources:
+      requests:
+        cpu: "2000m"
+        memory: "4Gi"
+  flower:
+    name: flower
+    namespace: default
+    hostName: "${FLOWER_HOSTNAME}"
+    port: 8000
+    image:
+      repository: "${DOCKER_REG_URL}/${DOCKER_REG_NAME}/${FLOWER_IMAGE_NAME}"
+      tag: "${SHA_VERSION}"
+    autoscaling:
+      minScale: 1
+      maxScale: 10
+      targetUtilizationPercentage: 60
+      concurrency: 1
+    env:
+      - name: DJANGO_SETTINGS_MODULE
+        value: "${DJANGO_SETTINGS_MODULE}"
+    resources:
+      requests:
+        cpu: "2000m"
+        memory: "4Gi"
+  worker:
+    name: celery-worker
+    namespace: default
+    image:
+      repository: "${DOCKER_REG_URL}/${DOCKER_REG_NAME}/${CELERY_WORKER_IMAGE_NAME}"
+      tag: "${SHA_VERSION}"
+    autoscaling:
+      minScale: 1
+      maxScale: 10
+      queueLengthTarget: 10
+      queueName: celery
+    env:
+      - name: DJANGO_SETTINGS_MODULE
+        value: "${DJANGO_SETTINGS_MODULE}"
+      - name: CELERY_BROKER_URL
+        valueFrom:
+          secretKeyRef:
+            name: app-auth
+            key: celery_broker_url
+            optional: false
+    resources:
+      requests:
+        cpu: "2000m"
+        memory: "4Gi"
