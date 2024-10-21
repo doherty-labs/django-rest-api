@@ -78,6 +78,9 @@ jobs:
         uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DOCKER_REG_PASSWORD }}
+      - name: Set outputs
+        id: vars
+        run: echo "sha_short=sha-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
       - name: Save DigitalOcean kubeconfig with short-lived credentials
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 3600 django-rest-api-qa-kubernetes-cluster
       - name: Replace reg url
