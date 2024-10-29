@@ -1,0 +1,156 @@
+name: Deploy QA
+
+concurrency:
+  group: main-qa-deploy
+  cancel-in-progress: false
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  push_docker_image_to_github_packages:
+    name: Build and push docker images
+    runs-on: ubuntu-latest
+    environment: qa
+    strategy:
+      matrix:
+        include:
+          - {
+              dockerfile: "./infrastructure/rest-api/Dockerfile",
+              tag: "qa-rest-api",
+            }
+          - {
+              dockerfile: "./infrastructure/celery-worker/Dockerfile",
+              tag: "qa-celery-worker",
+            }
+          - {
+              dockerfile: "./infrastructure/celery-flower/Dockerfile",
+              tag: "qa-celery-flower",
+            }
+          - {
+              dockerfile: "./infrastructure/celery-scheduler/Dockerfile",
+              tag: "qa-celery-scheduler",
+            }
+    steps:
+      - uses: actions/checkout@v4
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.DOCKER_REG_URL }}
+          username: ${{ secrets.DOCKER_REG_USERNAME }}
+          password: ${{ secrets.DOCKER_REG_PASSWORD }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.DOCKER_REG_URL }}/${{ secrets.DOCKER_REG_NAME }}/${{ matrix.tag }}
+          tags: |
+            type=sha
+      - name: Set outputs
+        id: vars
+        run: echo "sha_short=sha-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          file: ${{ matrix.dockerfile }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+  deploy_k8:
+    needs: push_docker_image_to_github_packages
+    name: Deploy to Kubernetes
+    runs-on: ubuntu-latest
+    environment: qa
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-helm@v4.2.0
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DOCKER_REG_PASSWORD }}
+      - name: Set outputs
+        id: vars
+        run: echo "sha_short=sha-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      - name: Save DigitalOcean kubeconfig with short-lived credentials
+        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 3600 ${{ secrets.CLUSTER_NAME }}
+      - name: Replace reg url
+        uses: richardrigutins/replace-in-files@v2
+        with:
+          files: "./infrastructure/helm-values.yaml"
+          search-text: "${DOCKER_REG_URL}"
+          replacement-text: ${{ secrets.DOCKER_REG_URL }}
+      - name: Replace reg name
+        uses: richardrigutins/replace-in-files@v2
+        with:
+          files: "./infrastructure/helm-values.yaml"
+          search-text: "${DOCKER_REG_NAME}"
+          replacement-text: ${{ secrets.DOCKER_REG_NAME }}
+      - name: Replace sha version
+        uses: richardrigutins/replace-in-files@v2
+        with:
+          files: "./infrastructure/helm-values.yaml"
+          search-text: "${SHA_VERSION}"
+          replacement-text: ${{ steps.vars.outputs.sha_short }}
+      - name: Replace django settings module
+        uses: richardrigutins/replace-in-files@v2
+        with:
+          files: "./infrastructure/helm-values.yaml"
+          search-text: "${DJANGO_SETTINGS_MODULE}"
+          replacement-text: "django_project.settings_qa"
+      - name: Replace rest api image name
+        uses: richardrigutins/replace-in-files@v2
+        with:
+          files: "./infrastructure/helm-values.yaml"
+          search-text: "${REST_API_IMAGE_NAME}"
+          replacement-text: "qa-rest-api"
+      - name: Replace celery scheduler image name
+        uses: richardrigutins/replace-in-files@v2
+        with:
+          files: "./infrastructure/helm-values.yaml"
+          search-text: "${CELERY_SCHEDULER_IMAGE_NAME}"
+          replacement-text: "qa-celery-scheduler"
+      - name: Replace celery flower image name
+        uses: richardrigutins/replace-in-files@v2
+        with:
+          files: "./infrastructure/helm-values.yaml"
+          search-text: "${FLOWER_IMAGE_NAME}"
+          replacement-text: "qa-celery-flower"
+      - name: Replace celery worker image name
+        uses: richardrigutins/replace-in-files@v2
+        with:
+          files: "./infrastructure/helm-values.yaml"
+          search-text: "${CELERY_WORKER_IMAGE_NAME}"
+          replacement-text: "qa-celery-worker"
+      - name: Replace API hostname
+        uses: richardrigutins/replace-in-files@v2
+        with:
+          files: "./infrastructure/helm-values.yaml"
+          search-text: "${REST_API_HOSTNAME}"
+          replacement-text: "api-qa.dohertylabs.com"
+      - name: Replace flower hostname
+        uses: richardrigutins/replace-in-files@v2
+        with:
+          files: "./infrastructure/helm-values.yaml"
+          search-text: "${FLOWER_HOSTNAME}"
+          replacement-text: "flower-qa.dohertylabs.com"
+      - name: Output Helm values
+        run: cat ./infrastructure/helm-values.yaml
+      - name: Add Helm repository
+        run: helm repo add doherty-labs https://doherty-labs.github.io/helm-charts/
+      - name: Search for Helm chart
+        run: helm search repo doherty-labs
+      - name: Update repo
+        run: helm repo update doherty-labs
+      - name: Delete old collectstatic
+        run: kubectl delete -n default job collectstatic --cascade=background
+      - name: Delete old django-migrate
+        run: kubectl delete -n default job django-migrate --cascade=background
+      - name: Delete old elastic-migrate
+        run: kubectl delete -n default job elastic-migrate --cascade=background
+      - name: Delete old create-superuser
+        run: kubectl delete -n default job django-create-superuser --cascade=background
+      - name: Install Helm chart
+        run: helm upgrade --install django-celery-api doherty-labs/django-celery-api -f ./infrastructure/helm-values.yaml --debug --wait

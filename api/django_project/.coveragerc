@@ -1,0 +1,5 @@
+[run]
+omit = */migrations/*,*/modules/*,*/factory/*,*/models/*,*/tests/*,*/e2e/*,*/schemas/*,*/services/*,*/serializers/*,*/management/*,admin.py,apps.py,channels.py,django_project/*,__init__.py
+source = rest_api
+[report]
+show_missing = True
