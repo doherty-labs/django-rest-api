@@ -1,3 +1,6 @@
+Deploy Django to DigitalOcean Kubernetes
+https://youtu.be/-md_6nmogNc
+
 # Template Overview
 
 - Django Rest API
