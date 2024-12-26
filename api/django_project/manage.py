@@ -1,12 +1,19 @@
 #!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
-import os
-import sys
-from ast import literal_eval
+import os  # noqa: E402
 
-from opentelemetry.instrumentation.django import DjangoInstrumentor
-from opentelemetry.instrumentation.elasticsearch import ElasticsearchInstrumentor
-from opentelemetry.instrumentation.redis import RedisInstrumentor
+if os.environ.get("ENABLE_GEVENT_PATCH", "False").lower().strip() == "true":
+    from gevent import monkey  # noqa: E402
+
+    monkey.patch_all()  # noqa: E402
+
+    from grpc.experimental.gevent import init_gevent  # noqa: E402
+
+    init_gevent()  # noqa: E402
+
+import os  # noqa: E402, F404
+import sys  # noqa: E402, F404
+from ast import literal_eval  # noqa: E402, F404
 
 DEBUG = literal_eval(os.environ.get("DEBUG_MODE", "True"))
 
@@ -19,12 +26,6 @@ def initialize_debugger():
             debugpy.listen(("0.0.0.0", 8069))
         except Exception:
             pass
-
-
-def initialize_opentelemetry():
-    DjangoInstrumentor().instrument(is_sql_commentor_enabled=True)
-    ElasticsearchInstrumentor().instrument()
-    RedisInstrumentor().instrument()
 
 
 def main():
@@ -43,5 +44,4 @@ def main():
 
 if __name__ == "__main__":
     initialize_debugger()
-    initialize_opentelemetry()
     main()

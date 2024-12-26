@@ -1,6 +1,15 @@
-from __future__ import absolute_import, unicode_literals
+import os  # noqa: E402
 
-import os
+if os.environ.get("ENABLE_GEVENT_PATCH", "False").lower().strip() == "true":
+    from gevent import monkey  # noqa: E402
+
+    monkey.patch_all()  # noqa: E402
+
+    from grpc.experimental.gevent import init_gevent  # noqa: E402
+
+    init_gevent()  # noqa: E402
+
+
 from datetime import timedelta
 from pathlib import Path
 
