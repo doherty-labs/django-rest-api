@@ -145,12 +145,12 @@ jobs:
       - name: Update repo
         run: helm repo update doherty-labs
       - name: Delete old collectstatic
-        run: kubectl delete -n default job collectstatic --cascade=background
+        run: kubectl delete -n default job collectstatic --cascade=background --ignore-not-found
       - name: Delete old django-migrate
-        run: kubectl delete -n default job django-migrate --cascade=background
+        run: kubectl delete -n default job django-migrate --cascade=background --ignore-not-found
       - name: Delete old elastic-migrate
-        run: kubectl delete -n default job elastic-migrate --cascade=background
+        run: kubectl delete -n default job elastic-migrate --cascade=background --ignore-not-found
       - name: Delete old create-superuser
-        run: kubectl delete -n default job django-create-superuser --cascade=background
+        run: kubectl delete -n default job django-create-superuser --cascade=background --ignore-not-found
       - name: Install Helm chart
         run: helm upgrade --install django-celery-api doherty-labs/django-celery-api -f ./infrastructure/helm-values.yaml --debug --wait

@@ -59,15 +59,64 @@ celery:
     image:
       repository: "${DOCKER_REG_URL}/${DOCKER_REG_NAME}/${CELERY_WORKER_IMAGE_NAME}"
       tag: "${SHA_VERSION}"
-    autoscaling:
-      minScale: 1
-      maxScale: 10
-      queueLengthTarget: 10
-      queueName: celery
-    env:
-      - name: DJANGO_SETTINGS_MODULE
-        value: "${DJANGO_SETTINGS_MODULE}"
-    resources:
-      requests:
-        cpu: "1000m"
-        memory: "2Gi"
+    queues:
+      - queueName: celery
+        autoscaling:
+          minScale: 1
+          maxScale: 5
+          queueLengthTarget: 10
+          pollingInterval: 30
+          cooldownPeriod: 200
+        env:
+          - name: DJANGO_SETTINGS_MODULE
+            value: "${DJANGO_SETTINGS_MODULE}"
+          - name: WORKER_POOL
+            value: "gevent"
+          - name: CONCURRENCY
+            value: "100"
+          - name: ENABLE_GEVENT_PATCH
+            value: "true"
+        resources:
+          requests:
+            cpu: "1000m"
+            memory: "2Gi"
+      - queueName: io_bound
+        autoscaling:
+          minScale: 1
+          maxScale: 5
+          queueLengthTarget: 10
+          pollingInterval: 30
+          cooldownPeriod: 200
+        env:
+          - name: DJANGO_SETTINGS_MODULE
+            value: "${DJANGO_SETTINGS_MODULE}"
+          - name: WORKER_POOL
+            value: "gevent"
+          - name: CONCURRENCY
+            value: "100"
+          - name: ENABLE_GEVENT_PATCH
+            value: "true"
+        resources:
+          requests:
+            cpu: "1000m"
+            memory: "2Gi"
+      - queueName: cpu_bound
+        autoscaling:
+          minScale: 1
+          maxScale: 5
+          queueLengthTarget: 10
+          pollingInterval: 30
+          cooldownPeriod: 200
+        env:
+          - name: DJANGO_SETTINGS_MODULE
+            value: "${DJANGO_SETTINGS_MODULE}"
+          - name: WORKER_POOL
+            value: "prefork"
+          - name: CONCURRENCY
+            value: "2"
+          - name: ENABLE_GEVENT_PATCH
+            value: "false"
+        resources:
+          requests:
+            cpu: "2000m"
+            memory: "4Gi"

@@ -9,9 +9,34 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-import os
+import os  # noqa: E402
+
+if os.environ.get("ENABLE_GEVENT_PATCH", "False").lower().strip() == "true":
+    from gevent import monkey  # noqa: E402
+
+    monkey.patch_all()  # noqa: E402
+
+    from grpc.experimental.gevent import init_gevent  # noqa: E402
+
+    init_gevent()  # noqa: E402
+
 import sys
 from pathlib import Path
+
+from opentelemetry import metrics, trace
+from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import OTLPMetricExporter
+from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+from opentelemetry.instrumentation.celery import CeleryInstrumentor
+from opentelemetry.instrumentation.django import DjangoInstrumentor
+from opentelemetry.instrumentation.elasticsearch import ElasticsearchInstrumentor
+from opentelemetry.instrumentation.psycopg2 import Psycopg2Instrumentor
+from opentelemetry.instrumentation.redis import RedisInstrumentor
+from opentelemetry.instrumentation.requests import RequestsInstrumentor
+from opentelemetry.sdk.metrics import MeterProvider
+from opentelemetry.sdk.metrics.export import PeriodicExportingMetricReader
+from opentelemetry.sdk.resources import SERVICE_NAME, Resource
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -159,11 +184,11 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CELERY_BROKER_URL = os.environ.get(
-    "CELERY_BROKER_URL", "amqp://guest:guest@rabbitmq:5672/"
+    "CELERY_BROKER_URL", "amqp://guest:guest@rabbitmq:5672"
 )
 CELERY_RESULT_BACKEND = os.environ.get(
     "CELERY_RESULT_URL",
-    "redis://localhost:6379/0",
+    "redis://redis:6379/0",
 )
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
@@ -177,7 +202,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [(os.environ.get("CHANNELS_URLS", "redis://localhost:6379/0"))],
+            "hosts": [(os.environ.get("CHANNELS_URLS", "redis://redis:6379/0"))],
         },
     },
 }
@@ -185,7 +210,7 @@ CHANNEL_LAYERS = {
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": os.environ.get("CHANNELS_URLS", "redis://localhost:6379/0"),
+        "LOCATION": os.environ.get("CHANNELS_URLS", "redis://redis:6379/0"),
     }
 }
 
@@ -245,3 +270,43 @@ JWT_AUTH = {
     "JWT_ISSUER": AUTH0_DOMAIN,
     "JWT_AUTH_HEADER_PREFIX": "Bearer",
 }
+
+
+def initialize_opentelemetry():
+    resource = Resource(attributes={SERVICE_NAME: "rest-api"})
+
+    traceProvider = TracerProvider(resource=resource)
+    processor = BatchSpanProcessor(OTLPSpanExporter(endpoint="datadog-agent:4317"))
+    traceProvider.add_span_processor(processor)
+    trace.set_tracer_provider(traceProvider)
+
+    reader = PeriodicExportingMetricReader(
+        OTLPMetricExporter(endpoint="datadog-agent:4317")
+    )
+    meterProvider = MeterProvider(resource=resource, metric_readers=[reader])
+    metrics.set_meter_provider(meterProvider)
+
+    DjangoInstrumentor().instrument(is_sql_commentor_enabled=True)
+    ElasticsearchInstrumentor().instrument()
+    RedisInstrumentor().instrument()
+    RequestsInstrumentor().instrument()
+    Psycopg2Instrumentor().instrument(enable_commenter=True, commenter_options={})
+    CeleryInstrumentor().instrument()
+
+
+def add_open_telemetry_spans(_, __, event_dict):
+    span = trace.get_current_span()
+    if not span.is_recording():
+        event_dict["span"] = None
+        return event_dict
+
+    ctx = span.get_span_context()
+    parent = getattr(span, "parent", None)
+
+    event_dict["span"] = {
+        "span_id": hex(ctx.span_id),
+        "trace_id": hex(ctx.trace_id),
+        "parent_span_id": None if not parent else hex(parent.span_id),
+    }
+
+    return event_dict
