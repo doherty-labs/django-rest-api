@@ -78,6 +78,7 @@ django-storages = "^1.14.4"
 psycopg2 = "^2.9.10"
 typing-extensions = "^4.12.2"
 gevent = "^24.10.3"
+pyopenssl = "^24.3.0"
 
 [tool.poetry.dev-dependencies]
 
