@@ -71,6 +71,7 @@ jobs:
           DATABASE_USER: postgres
           DATABASE_PASSWORD: postgres
         run: |
+          ls -la
           flake8 ./
           mypy ./
           isort ./ --check --profile black
