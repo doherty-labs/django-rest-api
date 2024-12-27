@@ -23,20 +23,13 @@ if os.environ.get("ENABLE_GEVENT_PATCH", "False").lower().strip() == "true":
 import sys
 from pathlib import Path
 
-from opentelemetry import metrics, trace
-from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import OTLPMetricExporter
-from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+from opentelemetry import trace
 from opentelemetry.instrumentation.celery import CeleryInstrumentor
 from opentelemetry.instrumentation.django import DjangoInstrumentor
 from opentelemetry.instrumentation.elasticsearch import ElasticsearchInstrumentor
 from opentelemetry.instrumentation.psycopg2 import Psycopg2Instrumentor
 from opentelemetry.instrumentation.redis import RedisInstrumentor
 from opentelemetry.instrumentation.requests import RequestsInstrumentor
-from opentelemetry.sdk.metrics import MeterProvider
-from opentelemetry.sdk.metrics.export import PeriodicExportingMetricReader
-from opentelemetry.sdk.resources import SERVICE_NAME, Resource
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -273,19 +266,6 @@ JWT_AUTH = {
 
 
 def initialize_opentelemetry():
-    resource = Resource(attributes={SERVICE_NAME: "rest-api"})
-
-    traceProvider = TracerProvider(resource=resource)
-    processor = BatchSpanProcessor(OTLPSpanExporter(endpoint="datadog-agent:4317"))
-    traceProvider.add_span_processor(processor)
-    trace.set_tracer_provider(traceProvider)
-
-    reader = PeriodicExportingMetricReader(
-        OTLPMetricExporter(endpoint="datadog-agent:4317")
-    )
-    meterProvider = MeterProvider(resource=resource, metric_readers=[reader])
-    metrics.set_meter_provider(meterProvider)
-
     DjangoInstrumentor().instrument(is_sql_commentor_enabled=True)
     ElasticsearchInstrumentor().instrument()
     RedisInstrumentor().instrument()
