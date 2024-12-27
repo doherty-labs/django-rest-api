@@ -28,3 +28,12 @@ https://github.com/doherty-labs/helm-charts
 # Terraform Modules
 
 https://github.com/doherty-labs/terraform-module-repo
+
+
+TODO
+
+Generate Python Client 
+Generate Typescript Client
+Generate Javascript Client
+Allow ingresses for web applications
+CI check for diff in clients 

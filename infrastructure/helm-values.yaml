@@ -17,6 +17,8 @@ service:
       value: "${DJANGO_SETTINGS_MODULE}"
     - name: OTEL_SERVICE_NAME
       value: "rest-api"
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: "http://datadog-agent:4317"
     - name: OTEL_RESOURCE_ATTRIBUTES
       value: "cloud.provider=digitalocean,deployment.environment=${ENV},service.version=${SHA_VERSION},container.image.name=${DOCKER_REG_URL}/${DOCKER_REG_NAME}/${CELERY_WORKER_IMAGE_NAME},container.image.tag=${SHA_VERSION}"
   resources:
@@ -36,6 +38,8 @@ celery:
         value: "${DJANGO_SETTINGS_MODULE}"
       - name: OTEL_SERVICE_NAME
         value: "celery-scheduler"
+      - name: OTEL_EXPORTER_OTLP_ENDPOINT
+        value: "http://datadog-agent:4317"
       - name: OTEL_RESOURCE_ATTRIBUTES
         value: "cloud.provider=digitalocean,deployment.environment=${ENV},service.version=${SHA_VERSION},container.image.name=${DOCKER_REG_URL}/${DOCKER_REG_NAME}/${CELERY_WORKER_IMAGE_NAME},container.image.tag=${SHA_VERSION}"
     resources:
@@ -59,6 +63,8 @@ celery:
         value: "${DJANGO_SETTINGS_MODULE}"
       - name: OTEL_SERVICE_NAME
         value: "celery-flower"
+      - name: OTEL_EXPORTER_OTLP_ENDPOINT
+        value: "http://datadog-agent:4317"
       - name: OTEL_RESOURCE_ATTRIBUTES
         value: "cloud.provider=digitalocean,deployment.environment=${ENV},service.version=${SHA_VERSION},container.image.name=${DOCKER_REG_URL}/${DOCKER_REG_NAME}/${CELERY_WORKER_IMAGE_NAME},container.image.tag=${SHA_VERSION}"
     resources:
@@ -90,6 +96,8 @@ celery:
             value: "true"
           - name: OTEL_SERVICE_NAME
             value: "celery_worker_queue_celery"
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: "http://datadog-agent:4317"
           - name: OTEL_RESOURCE_ATTRIBUTES
             value: "cloud.provider=digitalocean,deployment.environment=${ENV},service.version=${SHA_VERSION},container.image.name=${DOCKER_REG_URL}/${DOCKER_REG_NAME}/${CELERY_WORKER_IMAGE_NAME},container.image.tag=${SHA_VERSION}"
         resources:
@@ -112,6 +120,8 @@ celery:
             value: "100"
           - name: ENABLE_GEVENT_PATCH
             value: "true"
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: "http://datadog-agent:4317"
           - name: OTEL_SERVICE_NAME
             value: "celery_worker_queue_io_bound"
           - name: OTEL_RESOURCE_ATTRIBUTES
@@ -138,6 +148,8 @@ celery:
             value: "false"
           - name: OTEL_SERVICE_NAME
             value: "celery_worker_queue_cpu_bound"
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: "http://datadog-agent:4317"
           - name: OTEL_RESOURCE_ATTRIBUTES
             value: "cloud.provider=digitalocean,deployment.environment=${ENV},service.version=${SHA_VERSION},container.image.name=${DOCKER_REG_URL}/${DOCKER_REG_NAME}/${CELERY_WORKER_IMAGE_NAME},container.image.tag=${SHA_VERSION}"
         resources:
