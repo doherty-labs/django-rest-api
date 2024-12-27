@@ -173,6 +173,7 @@ class RESTClientObject:
         headers = headers or {}
         # url already contains the URL query string
         # so reset query_params to empty dict
+        query_params = {}
 
         timeout = None
         if _request_timeout:

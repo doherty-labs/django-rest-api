@@ -14,3 +14,4 @@
 
 
 # import models into model package
+from django_rest_api.models.sample import Sample

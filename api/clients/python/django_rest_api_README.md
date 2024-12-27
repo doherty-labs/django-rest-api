@@ -49,11 +49,11 @@ with django_rest_api.ApiClient(configuration) as api_client:
     api_instance = django_rest_api.SampleApi(api_client)
 
     try:
-        api_response = api_instance.list_auth_view_tests()
-        print("The response of SampleApi->list_auth_view_tests:\n")
+        api_response = api_instance.retrieve_sample()
+        print("The response of SampleApi->retrieve_sample:\n")
         pprint(api_response)
     except ApiException as e:
-        print("Exception when calling SampleApi->list_auth_view_tests: %s\n" % e)
+        print("Exception when calling SampleApi->retrieve_sample: %s\n" % e)
 
 ```
 
@@ -63,11 +63,12 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*SampleApi* | [**list_auth_view_tests**](django_rest_api/docs/SampleApi.md#list_auth_view_tests) | **GET** /sample/get | 
+*SampleApi* | [**retrieve_sample**](django_rest_api/docs/SampleApi.md#retrieve_sample) | **GET** /sample/get | 
 
 
 ## Documentation For Models
 
+ - [Sample](django_rest_api/docs/Sample.md)
 
 
 <a id="documentation-for-authorization"></a>

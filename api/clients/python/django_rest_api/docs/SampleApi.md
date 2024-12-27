@@ -4,11 +4,11 @@ All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**list_auth_view_tests**](SampleApi.md#list_auth_view_tests) | **GET** /sample/get | 
+[**retrieve_sample**](SampleApi.md#retrieve_sample) | **GET** /sample/get | 
 
 
-# **list_auth_view_tests**
-> List[object] list_auth_view_tests()
+# **retrieve_sample**
+> Sample retrieve_sample()
 
 
 
@@ -20,6 +20,7 @@ Method | HTTP request | Description
 import time
 import os
 import django_rest_api
+from django_rest_api.models.sample import Sample
 from django_rest_api.rest import ApiException
 from pprint import pprint
 
@@ -36,11 +37,11 @@ with django_rest_api.ApiClient(configuration) as api_client:
     api_instance = django_rest_api.SampleApi(api_client)
 
     try:
-        api_response = api_instance.list_auth_view_tests()
-        print("The response of SampleApi->list_auth_view_tests:\n")
+        api_response = api_instance.retrieve_sample()
+        print("The response of SampleApi->retrieve_sample:\n")
         pprint(api_response)
     except Exception as e:
-        print("Exception when calling SampleApi->list_auth_view_tests: %s\n" % e)
+        print("Exception when calling SampleApi->retrieve_sample: %s\n" % e)
 ```
 
 
@@ -50,7 +51,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-**List[object]**
+[**Sample**](Sample.md)
 
 ### Authorization
 

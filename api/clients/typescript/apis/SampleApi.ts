@@ -14,6 +14,13 @@
 
 
 import * as runtime from '../runtime';
+import type {
+  Sample,
+} from '../models/index';
+import {
+    SampleFromJSON,
+    SampleToJSON,
+} from '../models/index';
 
 /**
  * 
@@ -23,7 +30,7 @@ export class SampleApi extends runtime.BaseAPI {
     /**
      * 
      */
-    async listAuthViewTestsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<any>>> {
+    async retrieveSampleRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Sample>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -35,14 +42,14 @@ export class SampleApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse<any>(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => SampleFromJSON(jsonValue));
     }
 
     /**
      * 
      */
-    async listAuthViewTests(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<any>> {
-        const response = await this.listAuthViewTestsRaw(initOverrides);
+    async retrieveSample(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Sample> {
+        const response = await this.retrieveSampleRaw(initOverrides);
         return await response.value();
     }
 

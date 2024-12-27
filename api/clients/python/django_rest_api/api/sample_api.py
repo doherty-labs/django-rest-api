@@ -13,11 +13,11 @@
 
 
 import re  # noqa: F401
-from typing import List
 
 from django_rest_api.api_client import ApiClient
 from django_rest_api.api_response import ApiResponse
 from django_rest_api.exceptions import ApiTypeError, ApiValueError  # noqa: F401
+from django_rest_api.models.sample import Sample
 from pydantic import validate_arguments
 
 
@@ -34,14 +34,14 @@ class SampleApi:
         self.api_client = api_client
 
     @validate_arguments
-    def list_auth_view_tests(self, **kwargs) -> List[object]:  # noqa: E501
-        """list_auth_view_tests  # noqa: E501
+    def retrieve_sample(self, **kwargs) -> Sample:  # noqa: E501
+        """retrieve_sample  # noqa: E501
 
           # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.list_auth_view_tests(async_req=True)
+        >>> thread = api.retrieve_sample(async_req=True)
         >>> result = thread.get()
 
         :param async_req: Whether to execute the request asynchronously.
@@ -53,25 +53,23 @@ class SampleApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: List[object]
+        :rtype: Sample
         """
         kwargs["_return_http_data_only"] = True
         if "_preload_content" in kwargs:
-            message = "Error! Please call the list_auth_view_tests_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
+            message = "Error! Please call the retrieve_sample_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
             raise ValueError(message)
-        return self.list_auth_view_tests_with_http_info(**kwargs)  # noqa: E501
+        return self.retrieve_sample_with_http_info(**kwargs)  # noqa: E501
 
     @validate_arguments
-    def list_auth_view_tests_with_http_info(
-        self, **kwargs
-    ) -> ApiResponse:  # noqa: E501
-        """list_auth_view_tests  # noqa: E501
+    def retrieve_sample_with_http_info(self, **kwargs) -> ApiResponse:  # noqa: E501
+        """retrieve_sample  # noqa: E501
 
           # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.list_auth_view_tests_with_http_info(async_req=True)
+        >>> thread = api.retrieve_sample_with_http_info(async_req=True)
         >>> result = thread.get()
 
         :param async_req: Whether to execute the request asynchronously.
@@ -96,7 +94,7 @@ class SampleApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: tuple(List[object], status_code(int), headers(HTTPHeaderDict))
+        :rtype: tuple(Sample, status_code(int), headers(HTTPHeaderDict))
         """
 
         _params = locals()
@@ -119,7 +117,7 @@ class SampleApi:
             if _key not in _all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method list_auth_view_tests" % _key
+                    " to method retrieve_sample" % _key
                 )
             _params[_key] = _val
         del _params["kwargs"]
@@ -147,7 +145,7 @@ class SampleApi:
         _auth_settings = []  # noqa: E501
 
         _response_types_map = {
-            "200": "List[object]",
+            "200": "Sample",
         }
 
         return self.api_client.call_api(

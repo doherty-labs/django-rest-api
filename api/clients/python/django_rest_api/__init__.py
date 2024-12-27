@@ -33,3 +33,4 @@ from django_rest_api.exceptions import (
 )
 
 # import models into sdk package
+from django_rest_api.models.sample import Sample

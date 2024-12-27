@@ -61,14 +61,16 @@
     "**/node_modules/": true,
     "**/.next/": true,
     "**/.storybook/": true,
-    "**/next-env.d.ts": true
+    "**/next-env.d.ts": true,
+    "**/.ruff_cache/": true
   },
   "files.watcherExclude": {
     "**/.mypy_cache": true,
     "**/.venv": true,
     "**/docs/_build": true,
     "**/node_modules/": true,
-    "**/.next/": true
+    "**/.next/": true,
+    "**/api/clients/": true
   },
   "python.testing.autoTestDiscoverOnSaveEnabled": true,
   "python.testing.cwd": "${workspaceFolder}/api/django_project/",
