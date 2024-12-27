@@ -8,4 +8,4 @@ exclude =
     env
     .env
     .venv
-    site-packages
+    python3.13
