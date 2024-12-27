@@ -37,7 +37,7 @@ RUN poetry config virtualenvs.create false
 RUN poetry install
 
 RUN npm install -g openapi-typescript@7.0.2
-RUN npm install @openapitools/openapi-generator-cli -g
+RUN pip install openapi-generator-cli[jdk4py]
 
 WORKDIR /usr/src/app/web-app/merchant
 RUN yarn install
