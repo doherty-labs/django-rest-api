@@ -48,6 +48,8 @@ ALLOWED_HOSTS = ["*"]
 CORS_ALLOW_ALL_ORIGINS = True
 CSRF_TRUSTED_ORIGINS = ["http://localhost:3000"]
 
+ASYNC_MODE = os.environ.get("ASYNC_MODE", "False").lower().strip() == "true"
+
 # Application definition
 
 INSTALLED_APPS = [
