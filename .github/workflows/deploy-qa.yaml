@@ -136,6 +136,12 @@ jobs:
           files: "./infrastructure/helm-values.yaml"
           search-text: "${FLOWER_HOSTNAME}"
           replacement-text: "flower-qa.dohertylabs.com"
+      - name: Replace env
+        uses: richardrigutins/replace-in-files@v2
+        with:
+          files: "./infrastructure/helm-values.yaml"
+          search-text: "${ENV}"
+          replacement-text: "qa"
       - name: Output Helm values
         run: cat ./infrastructure/helm-values.yaml
       - name: Add Helm repository
