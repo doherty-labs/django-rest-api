@@ -8,8 +8,8 @@ from rest_api.serializers.sample import SampleSerializer
 UserModel = get_user_model()
 
 
-class AuthViewTest(RetrieveAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+class SampleViewTest(RetrieveAPIView):
+    permission_classes = [permissions.AllowAny]
     serializer_class = SampleSerializer
 
     def get(self, request):
