@@ -1,8 +1,4 @@
 #!/bin/bash
-
-
-# pip install openapi-generator-cli[jdk4py]
-
 export PYTHON_POST_PROCESS_FILE="./format_file.sh"
 export TYPESCRIPT_POST_PROCESS_FILE="prettier --write"
 
