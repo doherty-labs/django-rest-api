@@ -94,3 +94,8 @@ aggressive = 3
 
 [tool.isort]
 profile = "black"
+
+[tool.mypy]
+no_site_packages = True
+exclude = clients
+ignore_missing_imports = True
