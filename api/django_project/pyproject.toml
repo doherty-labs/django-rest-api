@@ -97,5 +97,5 @@ profile = "black"
 
 [tool.mypy]
 no_site_packages = true
-exclude = clients
+exclude = "clients"
 ignore_missing_imports = true
