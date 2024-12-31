@@ -9,5 +9,7 @@ class SMSNotificationService:
 
     def send_sms(self, to: str, body: str, phone_number: str):
         return self.get_twilio_client().messages.create(
-            to=to, from_=phone_number, body=body
+            to=to,
+            from_=phone_number,
+            body=body,
         )

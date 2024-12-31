@@ -12,9 +12,9 @@ class Command(createsuperuser.Command):
         # check if user already exists
         if self.UserModel.objects.filter(username=username).exists():
             self.stdout.write(
-                self.style.WARNING(f"Superuser {username} already exists")
+                self.style.WARNING(f"Superuser {username} already exists"),
             )
-            return
+            return None
 
         # create superuser
         return super().handle(*args, **options)

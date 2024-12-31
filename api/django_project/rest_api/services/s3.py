@@ -31,10 +31,15 @@ class ObjectStorageService:
         return client
 
     def generate_presigned_url(
-        self, client_method, method_parameters, expires_in
+        self,
+        client_method,
+        method_parameters,
+        expires_in,
     ) -> str:
         url = self.get_s3_client().generate_presigned_url(
-            ClientMethod=client_method, Params=method_parameters, ExpiresIn=expires_in
+            ClientMethod=client_method,
+            Params=method_parameters,
+            ExpiresIn=expires_in,
         )
         return url
 

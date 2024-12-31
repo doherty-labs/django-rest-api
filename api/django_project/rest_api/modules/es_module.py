@@ -17,7 +17,7 @@ class EsModule(Module):
         ):
             parser_url = urlparse(str(settings.ELASTIC_SEARCH.get("host")))
             out_url = parser_url._replace(
-                netloc=parser_url.netloc.replace(str(parser_url.port), "")
+                netloc=parser_url.netloc.replace(str(parser_url.port), ""),
             ).geturl()
 
             es = Elasticsearch(

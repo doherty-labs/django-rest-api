@@ -24,7 +24,7 @@ InstanceInjector = Injector(
         StripeModule,
         SMSModule,
         MixpanelModule,
-    ]
+    ],
 )
 
 
@@ -39,5 +39,5 @@ TestInjector = Injector(
         TestStripeModule,
         TestSMSModule,
         TestMixpanelModule,
-    ]
+    ],
 )
