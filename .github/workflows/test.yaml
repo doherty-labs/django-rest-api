@@ -72,7 +72,7 @@ jobs:
           DATABASE_PASSWORD: postgres
         run: |
           ls -la
-          ruff --check
+          ruff check .
       - name: Run Tests
         working-directory: ./api/django_project/
         env:
