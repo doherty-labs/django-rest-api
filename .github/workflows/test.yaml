@@ -73,7 +73,7 @@ jobs:
         run: |
           ls -la
           flake8 ./
-          mypy ./
+          mypy ./ --config-file mypy.ini
           isort ./ --check --profile black
           black ./ --check --diff
       - name: Run Tests
