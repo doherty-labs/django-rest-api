@@ -19,7 +19,7 @@
           "commands": [
             {
               "match": "\\.py$",
-              "cmd": "cd ${workspaceFolder}/ && poetry run autopep8 ${file} && poetry run flake8 ${file} && poetry run isort ${file} && poetry run black ${file}"
+              "cmd": "ruff format ${file} --config ${workspaceFolder}/api/django_project/pyproject.toml"
             },
             {
               "match": "\\.json$",
@@ -78,19 +78,14 @@
         }
       },
       "extensions": [
-        "ms-python.autopep8",
-        "ms-python.black-formatter",
         "yardensachs.copy-python-path",
         "ms-vscode-remote.remote-containers",
         "ms-azuretools.vscode-docker",
         "dbaeumer.vscode-eslint",
-        "ms-python.flake8",
         "github.copilot",
         "eamodio.gitlens",
         "visualstudioexptteam.vscodeintellicode",
-        "ms-python.isort",
         "ms-toolsai.jupyter",
-        "matangover.mypy",
         "esbenp.prettier-vscode",
         "ms-python.vscode-pylance",
         "ms-python.python",

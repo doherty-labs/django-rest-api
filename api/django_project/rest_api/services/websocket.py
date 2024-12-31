@@ -16,7 +16,10 @@ class WebsocketService:
         self.channel_layer = get_channel_layer()
 
     def send_message(
-        self, merchant_id: int, type_event: WebsocketEventTypes, message: BaseModel
+        self,
+        merchant_id: int,
+        type_event: WebsocketEventTypes,
+        message: BaseModel,
     ):
         async_to_sync(self.channel_layer.group_send)(
             "merchant_" + str(merchant_id),

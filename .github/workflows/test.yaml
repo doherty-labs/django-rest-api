@@ -72,10 +72,7 @@ jobs:
           DATABASE_PASSWORD: postgres
         run: |
           ls -la
-          flake8 ./
-          mypy ./
-          isort ./ --check --profile black
-          black ./ --check --diff
+          ruff --check
       - name: Run Tests
         working-directory: ./api/django_project/
         env:

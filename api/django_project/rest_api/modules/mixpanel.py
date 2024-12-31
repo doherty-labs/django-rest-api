@@ -15,7 +15,7 @@ class MixpanelModule(Module):
             mxp=Mixpanel(
                 settings.MIXPANEL_TOKEN,
                 consumer=Consumer(api_host="api-eu.mixpanel.com"),
-            )
+            ),
         )
 
 

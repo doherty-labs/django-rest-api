@@ -9,7 +9,7 @@ class StripeService:
 
     def create_connect_account(self, email: str) -> Account:
         return self.stripe_client.accounts.create(
-            params={"type": "standard", "email": email}
+            params={"type": "standard", "email": email},
         )
 
     def retrieve_account(self, account_id: str) -> Account:

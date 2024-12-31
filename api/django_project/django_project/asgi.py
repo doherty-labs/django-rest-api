@@ -21,6 +21,6 @@ application = OpenTelemetryMiddleware(
     ProtocolTypeRouter(
         {
             "websocket": AuthMiddlewareStack(URLRouter(websocket_urlpatterns)),
-        }
-    )
+        },
+    ),
 )

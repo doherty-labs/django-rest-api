@@ -26,7 +26,7 @@ DATABASES = {
         "HOST": SECRETS_MANAGER.get_secret("pg_host", ""),
         "PORT": SECRETS_MANAGER.get_secret("pg_port", ""),
         "OPTIONS": {"sslmode": "require"} if not DEBUG else {},
-    }
+    },
 }
 
 ELASTIC_SEARCH = {
@@ -52,7 +52,7 @@ CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
         "LOCATION": SECRETS_MANAGER.get_secret("redis_url", ""),
-    }
+    },
 }
 
 GMAPS_API_KEY = SECRETS_MANAGER.get_secret("gmaps_api_key", "")
@@ -76,12 +76,14 @@ AUTH0_DOMAIN = SECRETS_MANAGER.get_secret("auth_domain", "")
 AUTH0_IDENTIFIER = SECRETS_MANAGER.get_secret("auth_identifier", "")
 
 AUTH0_DATABASE_CONNECTION_ID = SECRETS_MANAGER.get_secret(
-    "auth_database_connection_id", ""
+    "auth_database_connection_id",
+    "",
 )
 AUTH0_GOOGLE_CONNECTION_ID = SECRETS_MANAGER.get_secret("auth_google_connection_id", "")
 AUTH0_REST_API_CLIENT_ID = SECRETS_MANAGER.get_secret("auth_rest_api_client_id", "")
 AUTH0_REST_API_CLIENT_SECRET = SECRETS_MANAGER.get_secret(
-    "auth_rest_api_client_secret", ""
+    "auth_rest_api_client_secret",
+    "",
 )
 
 SENDGRID_API_KEY = SECRETS_MANAGER.get_secret("sendgrid_api_key", "")
@@ -152,7 +154,7 @@ LOGGING = {
         "key_value": {
             "()": structlog.stdlib.ProcessorFormatter,
             "processor": structlog.processors.KeyValueRenderer(
-                key_order=["timestamp", "level", "event", "logger"]
+                key_order=["timestamp", "level", "event", "logger"],
             ),
         },
     },
@@ -183,7 +185,7 @@ LOGGING = {
             "handlers": ["console", "flat_line_file", "json_file"],
             "level": "INFO",
             "propagate": True,
-        }
+        },
     },
 }
 structlog.configure(

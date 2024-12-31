@@ -13,7 +13,11 @@ class EmailService:
         self.sendgrid_client = SendGridAPIClient(api_key=settings.SENDGRID_API_KEY)
 
     def send_email(
-        self, from_email: str, to_email: str, subject: str, content: str
+        self,
+        from_email: str,
+        to_email: str,
+        subject: str,
+        content: str,
     ) -> None:
         message = Mail(
             from_email=from_email,

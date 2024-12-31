@@ -12,7 +12,7 @@ current_timestamp = time.time()
 time_diff = current_timestamp - heartbeat_timestamp
 if time_diff > 60:
     print(
-        "Celery Worker liveness file timestamp DOES NOT matches the given constraint."
+        "Celery Worker liveness file timestamp DOES NOT matches the given constraint.",
     )
     sys.exit(1)
 print("Celery Worker liveness file found and timestamp matches the given constraint.")
