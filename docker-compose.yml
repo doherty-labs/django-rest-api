@@ -1,5 +1,24 @@
 version: "3.9"
 services:
+  websocket-server:
+    restart: always
+    build:
+      context: .
+      dockerfile: infrastructure/rest-api/Dockerfile
+    environment:
+      - ASYNC_MODE=True
+      - GUNICORN_WORKERS=1
+      - DJANGO_SETTINGS_MODULE=django_project.settings
+    depends_on:
+      - celery-worker
+      - flower
+      - rabbitmq
+    volumes:
+      - ./api/django_project:/usr/src/app/django
+    networks:
+      - django
+    ports:
+      - "8002:8000"
   flower:
     restart: always
     build:
@@ -23,7 +42,12 @@ services:
     build:
       context: .
       dockerfile: infrastructure/rest-api/Dockerfile
-    env_file: .env
+    environment:
+      - GUNICORN_WORKERS=1
+      - DJANGO_SETTINGS_MODULE=django_project.settings
+      - ENABLE_GEVENT_PATCH=True
+      - DEBUG_MODE=True
+      - GEVENT_SUPPORT=True
     depends_on:
       - celery-worker
       - flower
@@ -53,6 +77,8 @@ services:
       - elastic
     volumes:
       - ./:/usr/src/app
+    ports:
+      - "3000:3000"
     networks:
       - django
   celery-worker:

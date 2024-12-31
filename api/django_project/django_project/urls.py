@@ -19,11 +19,11 @@ from rest_framework import permissions
 from rest_framework.schemas import get_schema_view
 
 from rest_api.channels import TaskProgressConsumer
-from rest_api.views.sample import AuthViewTest
+from rest_api.views.sample import SampleViewTest
 
 rest_api_urlpatterns = [
     # Test
-    path("sample/get", AuthViewTest.as_view()),
+    path("sample/get", SampleViewTest.as_view()),
 ]
 
 urlpatterns = [

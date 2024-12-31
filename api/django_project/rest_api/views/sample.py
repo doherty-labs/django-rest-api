@@ -1,15 +1,19 @@
 from django.contrib.auth import get_user_model
 from rest_framework import permissions, status
+from rest_framework.generics import RetrieveAPIView
 from rest_framework.response import Response
-from rest_framework.views import APIView
+
+from rest_api.serializers.sample import SampleSerializer
 
 UserModel = get_user_model()
 
 
-class AuthViewTest(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+class SampleViewTest(RetrieveAPIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = SampleSerializer
 
     def get(self, request):
         return Response(
-            data={"names": ["bill", "bob", "keanu", "logan"]}, status=status.HTTP_200_OK
+            data=SampleSerializer({"names": ["bill", "bob", "keanu", "logan"]}).data,
+            status=status.HTTP_200_OK,
         )

@@ -1,2 +1,11 @@
 [flake8]
 extend-ignore = E501,E999
+exclude =
+    migrations
+    __pycache__
+    manage.py
+    settings.py
+    env
+    .env
+    .venv
+    clients
