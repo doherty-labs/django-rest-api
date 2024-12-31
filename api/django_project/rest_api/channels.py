@@ -12,8 +12,8 @@ class TaskProgressConsumer(JsonWebsocketConsumer):
         task_id = self.scope.get("url_route").get("kwargs").get("taskID")
         async_to_sync(self.channel_layer.group_add)(task_id, self.channel_name)
 
-    def receive(self, text_data=None, bytes_data=None, **kwargs):
+    def receive(self):
         self.send(text_data="Hello world!")
 
-    def disconnect(self, close_code):
+    def disconnect(self):
         self.close()

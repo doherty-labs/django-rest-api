@@ -6,6 +6,7 @@ import requests
 from django.contrib.auth import authenticate
 from django.http import JsonResponse
 from jwt import algorithms
+from rest_framework.exceptions import APIException, status
 
 from django_project.settings import AUTH0_DOMAIN, AUTH0_IDENTIFIER
 
@@ -16,16 +17,22 @@ def jwt_get_username_from_payload_handler(payload):
     return username
 
 
+NOT_FOUND = "Public key not found."
+
+
 def jwt_decode_token(token):
     header = jwt.get_unverified_header(token)
-    jwks = requests.get(AUTH0_DOMAIN + ".well-known/jwks.json").json()
+    jwks = requests.get(AUTH0_DOMAIN + ".well-known/jwks.json", timeout=30).json()
     public_key = None
     for jwk in jwks["keys"]:
         if jwk["kid"] == header["kid"]:
             public_key = algorithms.RSAAlgorithm.from_jwk(json.dumps(jwk))
 
     if public_key is None:
-        raise Exception("Public key not found.")
+        raise APIException(
+            NOT_FOUND,
+            code=status.HTTP_400_BAD_REQUEST,
+        )
 
     return jwt.decode(
         token,
@@ -40,9 +47,7 @@ def get_token_auth_header(request):
     """Obtains the Access Token from the Authorization Header"""
     auth = request.META.get("HTTP_AUTHORIZATION", None)
     parts = auth.split()
-    token = parts[1]
-
-    return token
+    return parts[1]
 
 
 def requires_scopes(required_scopes: list[str]):

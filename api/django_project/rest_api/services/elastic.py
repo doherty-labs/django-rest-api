@@ -1,12 +1,16 @@
+from __future__ import annotations
+
 import json
 import uuid
 from functools import wraps
-from typing import Any, Callable, Generic, TypeVar, cast
+from typing import TYPE_CHECKING, Any, Callable, Generic, TypeVar, cast
 
 from elasticsearch import Elasticsearch, helpers
-from injector import Inject
 from pydantic import BaseModel
-from redis import Redis
+
+if TYPE_CHECKING:
+    from injector import Inject
+    from redis import Redis
 
 FuncT = TypeVar("FuncT", bound=Callable[..., Any])
 ElasticPydanticModel = TypeVar("ElasticPydanticModel", bound=BaseModel)
@@ -192,32 +196,34 @@ class ElasticSearchService(Generic[ElasticPydanticModel]):
         return self.es.count(index=self.read_name)["count"]
 
     @index_check_decorator
-    def add(self, id: str, doc_data: ElasticPydanticModel):
+    def add(self, model_id: str, doc_data: ElasticPydanticModel):
         if not self.es.exists(index=self.write_name, id=id):
             return self.es.index(
                 index=self.write_name,
-                id=id,
+                id=model_id,
                 document=doc_data.dict(),
                 refresh=True,
             )
+        return None
 
     @index_check_decorator
-    def remove(self, id):
-        if self.es.exists(index=self.write_name, id=id):
-            return self.es.delete(index=self.write_name, id=id, refresh=True)
+    def remove(self, model_id):
+        if self.es.exists(index=self.write_name, id=model_id):
+            return self.es.delete(index=self.write_name, id=model_id, refresh=True)
+        return None
 
     @index_check_decorator
-    def get(self, id) -> ElasticPydanticModel | None:
-        res = self.es.get(index=self.read_name, id=id)["_source"]
+    def get(self, model_id) -> ElasticPydanticModel | None:
+        res = self.es.get(index=self.read_name, id=model_id)["_source"]
         if res:
             return self.pydantic_model.parse_obj(**res)
         return None
 
     @index_check_decorator
-    def update(self, id, doc_data: ElasticPydanticModel):
+    def update(self, model_id, doc_data: ElasticPydanticModel):
         return self.es.update(
             index=self.write_name,
-            id=id,
+            id=model_id,
             doc=doc_data.dict(),
             refresh=True,
             doc_as_upsert=True,
@@ -255,5 +261,6 @@ class ElasticSearchService(Generic[ElasticPydanticModel]):
             )
         success_count, fails = helpers.bulk(self.es, actions)
         if isinstance(fails, list) and len(fails) > 0:
-            raise Exception(f"Failed to bulk add docs: {json.dumps(fails)}")
+            msg = f"Failed to bulk add docs: {json.dumps(fails)}"
+            raise RuntimeError(msg)
         return success_count

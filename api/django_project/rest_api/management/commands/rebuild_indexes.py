@@ -4,6 +4,6 @@ from rest_api.tasks.elastic import rebuild_indexes
 
 
 class Command(BaseCommand):
-    def handle(self, *args, **options):
+    def handle(self):
         rebuild_indexes()
         self.stdout.write(self.style.SUCCESS("Rebuilt indexes successfully"))

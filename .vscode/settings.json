@@ -2,47 +2,6 @@
   "python.defaultInterpreterPath": "${workspaceFolder}/api/django_project/.venv/bin/python",
   "python.testing.pytestEnabled": true,
   "python.testing.unittestEnabled": false,
-  "emeraldwalk.runonsave": {
-    "autoClearConsole": true,
-    "commands": [
-      {
-        "match": "\\.py$",
-        "cmd": "cd ${workspaceFolder}/api/django_project/ && poetry run ruff format ${file}"
-      },
-      {
-        "match": "\\.json$",
-        "cmd": "prettier -w ${file}"
-      },
-      {
-        "match": "\\.js$",
-        "cmd": "prettier -w ${file}"
-      },
-      {
-        "match": "\\.ts$",
-        "cmd": "prettier -w ${file}"
-      },
-      {
-        "match": "\\.tsx$",
-        "cmd": "prettier -w ${file}"
-      },
-      {
-        "match": "\\.css$",
-        "cmd": "prettier -w ${file}"
-      },
-      {
-        "match": "\\.scss$",
-        "cmd": "prettier -w ${file}"
-      },
-      {
-        "match": "\\.yaml$",
-        "cmd": "prettier -w ${file}"
-      },
-      {
-        "match": "\\.yml$",
-        "cmd": "prettier -w ${file}"
-      }
-    ]
-  },
   "files.exclude": {
     "**/__pycache__": true,
     "**/*.pyc": true,

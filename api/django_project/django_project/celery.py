@@ -1,13 +1,13 @@
-import os  # noqa: E402
+import os
 
 if os.environ.get("ENABLE_GEVENT_PATCH", "False").lower().strip() == "true":
-    from gevent import monkey  # noqa: E402
+    from gevent import monkey
 
-    monkey.patch_all()  # noqa: E402
+    monkey.patch_all()
 
-    from grpc.experimental.gevent import init_gevent  # noqa: E402
+    from grpc.experimental.gevent import init_gevent
 
-    init_gevent()  # noqa: E402
+    init_gevent()
 
 
 from datetime import timedelta
@@ -19,15 +19,15 @@ from celery.signals import beat_init, worker_process_init, worker_ready, worker_
 from opentelemetry.instrumentation.celery import CeleryInstrumentor
 
 # File for validating worker readiness
-READINESS_FILE = Path("/tmp/celery_ready")
-HEARTBEAT_FILE = Path("/tmp/celery_worker_heartbeat")
+READINESS_FILE = Path("/tmp/celery_ready") # noqa: S108
+HEARTBEAT_FILE = Path("/tmp/celery_worker_heartbeat") # noqa: S108
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "django_project.settings")
 django.setup()
 
 
 class LivenessProbe(bootsteps.StartStopStep):
-    requires = {"celery.worker.components:Timer"}
+    requires = {"celery.worker.components:Timer"}  # noqa: RUF012
 
     def __init__(self, parent, **kwargs):
         super().__init__(parent, **kwargs)
@@ -42,10 +42,10 @@ class LivenessProbe(bootsteps.StartStopStep):
             priority=10,
         )
 
-    def stop(self, worker):
+    def stop(self):
         HEARTBEAT_FILE.unlink(missing_ok=True)
 
-    def update_heartbeat_file(self, worker):
+    def update_heartbeat_file(self):
         HEARTBEAT_FILE.touch()
 
 
@@ -76,5 +76,5 @@ app.conf.broker_connection_retry_on_startup = True
 
 
 @worker_process_init.connect(weak=False)
-def init_celery_tracing(*args, **kwargs):
+def init_celery_tracing(**_):
     CeleryInstrumentor().instrument()
