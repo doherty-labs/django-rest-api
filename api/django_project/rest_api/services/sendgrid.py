@@ -28,6 +28,7 @@ class EmailService:
 
         try:
             self.sendgrid_client.send(message)
-        except Exception as e:
-            logger.error(f"Failed to send email to {to_email}", exc_info=e)
-            raise e
+        except Exception:
+            msg = f"Failed to send email to {to_email}"
+            logger.exception(msg)
+            raise

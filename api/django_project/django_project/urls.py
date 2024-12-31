@@ -40,7 +40,8 @@ urlpatterns = [
             patterns=rest_api_urlpatterns,
         ),
     ),
-] + rest_api_urlpatterns
+    *rest_api_urlpatterns,
+]
 
 websocket_urlpatterns = [
     path("task/progress/<str:taskID>/", TaskProgressConsumer.as_asgi()),

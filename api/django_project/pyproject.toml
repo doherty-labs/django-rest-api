@@ -98,7 +98,7 @@ exclude = [
     ".venv",
     "clients"
 ]
-ignore = ["D", "RUF", "ANN", "ARG", "S", "G", "PTH", "TRY", "A", "EM", "RET", "T", "PGH", "PERF", "FA", "PLR"]
+ignore = ["D", "ANN", "PERF"]
 
 [tool.ruff.format]
 quote-style = "double"

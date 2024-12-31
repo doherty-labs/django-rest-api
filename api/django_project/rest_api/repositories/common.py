@@ -19,7 +19,7 @@ class CommonModelRepo(Generic[PydanticType]):
         self.es_instance = es_instance
 
     @abstractmethod
-    def get(self, id: int) -> PydanticType:
+    def get(self, model_id: int) -> PydanticType:
         pass
 
     @abstractmethod
@@ -27,9 +27,9 @@ class CommonModelRepo(Generic[PydanticType]):
         pass
 
     @abstractmethod
-    def update(self, id: int, data: PydanticType) -> PydanticType:
+    def update(self, model_id: int, data: PydanticType) -> PydanticType:
         pass
 
     @abstractmethod
-    def delete(self, id: int):
+    def delete(self, model_id: int):
         pass

@@ -21,14 +21,13 @@ class ObjectStorageService:
         self.region_name = region_name
 
     def get_s3_client(self):
-        client = boto3.client(
+        return boto3.client(
             "s3",
             aws_access_key_id=settings.BUCKET_KEY,
             aws_secret_access_key=settings.BUCKET_SECRET,
             endpoint_url=settings.BUCKET_ENDPOINT,
             region_name=settings.BUCKET_REGION,
         )
-        return client
 
     def generate_presigned_url(
         self,
@@ -36,12 +35,11 @@ class ObjectStorageService:
         method_parameters,
         expires_in,
     ) -> str:
-        url = self.get_s3_client().generate_presigned_url(
+        return self.get_s3_client().generate_presigned_url(
             ClientMethod=client_method,
             Params=method_parameters,
             ExpiresIn=expires_in,
         )
-        return url
 
     def gen_upload_url(self, file_name: str) -> str:
         return self.generate_presigned_url(

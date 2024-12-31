@@ -1,6 +1,6 @@
 import structlog
 
-from django_project.settings import *  # noqa
+from django_project.settings import *  # noqa: F403
 from django_project.settings import add_open_telemetry_spans, initialize_opentelemetry
 from rest_api.services.hcp import HcpVaultSecrets
 
