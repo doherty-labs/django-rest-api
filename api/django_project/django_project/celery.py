@@ -76,5 +76,5 @@ app.conf.broker_connection_retry_on_startup = True
 
 
 @worker_process_init.connect(weak=False)
-def init_celery_tracing():
+def init_celery_tracing(**_):
     CeleryInstrumentor().instrument()
