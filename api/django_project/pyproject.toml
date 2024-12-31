@@ -96,6 +96,6 @@ aggressive = 3
 profile = "black"
 
 [tool.mypy]
-no_site_packages = True
+no_site_packages = true
 exclude = clients
-ignore_missing_imports = True
+ignore_missing_imports = true
