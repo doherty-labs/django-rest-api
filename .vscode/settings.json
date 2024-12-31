@@ -1,10 +1,4 @@
 {
-  "mypy.dmypyExecutable": "${workspaceFolder}/api/django_project/.venv/bin/dmypy",
-  "mypy.configFile": "./api/django_project/mypy.ini",
-  "flake8.args": ["--config=${workspaceFolder}/api/django_project/.flake8"],
-  "autopep8.args": [
-    "--config=${workspaceFolder}/api/django_project/pyproject.toml"
-  ],
   "python.defaultInterpreterPath": "${workspaceFolder}/api/django_project/.venv/bin/python",
   "python.testing.pytestEnabled": true,
   "python.testing.unittestEnabled": false,
@@ -13,7 +7,7 @@
     "commands": [
       {
         "match": "\\.py$",
-        "cmd": "cd ${workspaceFolder}/api/django_project/ && poetry run autopep8 ${file} && poetry run flake8 ${file} && poetry run isort ${file} && poetry run black ${file}"
+        "cmd": "cd ${workspaceFolder}/api/django_project/ && poetry run ruff format ${file}"
       },
       {
         "match": "\\.json$",

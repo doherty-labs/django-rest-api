@@ -26,7 +26,8 @@ class ElasticSearchService(Generic[ElasticPydanticModel]):
         self.es = es
         self.redis = redis
         self.lock = self.redis.lock(
-            f"{self.es_index_name}_index_lock", timeout=60 * 60 * 2
+            f"{self.es_index_name}_index_lock",
+            timeout=60 * 60 * 2,
         )
 
     @staticmethod
@@ -61,7 +62,9 @@ class ElasticSearchService(Generic[ElasticPydanticModel]):
     def create_index(self):
         index_name = self.get_new_index_name()
         result = self.es.indices.create(
-            index=index_name, mappings=self.es_index_mapping, settings=self.es_settings
+            index=index_name,
+            mappings=self.es_index_mapping,
+            settings=self.es_settings,
         )
         self.es.indices.update_aliases(
             actions=[
@@ -69,15 +72,15 @@ class ElasticSearchService(Generic[ElasticPydanticModel]):
                     "add": {
                         "index": index_name,
                         "alias": self.read_name,
-                    }
+                    },
                 },
                 {
                     "add": {
                         "index": index_name,
                         "alias": self.write_name,
-                    }
+                    },
                 },
-            ]
+            ],
         )
         return result
 
@@ -94,7 +97,7 @@ class ElasticSearchService(Generic[ElasticPydanticModel]):
                 "add": {
                     "index": new_index_name,
                     "alias": self.write_name,
-                }
+                },
             },
         ]
         current_index_names = self.get_index_names_with_alias(self.write_name)
@@ -104,8 +107,8 @@ class ElasticSearchService(Generic[ElasticPydanticModel]):
                     "remove": {
                         "index": index_name,
                         "alias": self.write_name,
-                    }
-                }
+                    },
+                },
             )
         self.es.indices.update_aliases(actions=actions)
 
@@ -118,8 +121,8 @@ class ElasticSearchService(Generic[ElasticPydanticModel]):
                     "remove": {
                         "index": index_name,
                         "alias": self.read_name,
-                    }
-                }
+                    },
+                },
             )
 
         migrated_index_names = self.get_index_names_with_alias(self.write_name)
@@ -129,8 +132,8 @@ class ElasticSearchService(Generic[ElasticPydanticModel]):
                     "add": {
                         "index": index_name,
                         "alias": self.read_name,
-                    }
-                }
+                    },
+                },
             )
 
         self.es.indices.update_aliases(actions=action)
@@ -149,8 +152,8 @@ class ElasticSearchService(Generic[ElasticPydanticModel]):
                     "remove": {
                         "index": index_name,
                         "alias": self.write_name,
-                    }
-                }
+                    },
+                },
             )
 
         current_index_names = self.get_index_names_with_alias(self.read_name)
@@ -160,8 +163,8 @@ class ElasticSearchService(Generic[ElasticPydanticModel]):
                     "add": {
                         "index": index_name,
                         "alias": self.write_name,
-                    }
-                }
+                    },
+                },
             )
 
         self.es.indices.update_aliases(actions=action)
@@ -248,7 +251,7 @@ class ElasticSearchService(Generic[ElasticPydanticModel]):
                     "_op_type": "create",
                     "_id": data_dict.get("id"),
                     "_source": doc.dict(),
-                }
+                },
             )
         success_count, fails = helpers.bulk(self.es, actions)
         if isinstance(fails, list) and len(fails) > 0:

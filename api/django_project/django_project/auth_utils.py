@@ -62,7 +62,7 @@ def requires_scopes(required_scopes: list[str]):
                 if all(scope_checks):
                     return f(*args, **kwargs)
             response = JsonResponse(
-                {"message": "You don't have access to this resource"}
+                {"message": "You don't have access to this resource"},
             )
             response.status_code = 403
             return response
