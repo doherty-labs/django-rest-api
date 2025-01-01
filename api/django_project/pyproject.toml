@@ -84,14 +84,11 @@ build-backend = "poetry.core.masonry.api"
 [tool.ruff.lint]
 select = ["ALL"]
 exclude = [
-    "migrations",
-    "__pycache__",
+    "**/tests/**",
+    "**/migrations/*",
+    "**/django_project/**",
+    "**/management/**",
     "manage.py",
-    "settings.py",
-    "env",
-    ".env",
-    ".venv",
-    "clients"
 ]
 ignore = ["D"]
 
