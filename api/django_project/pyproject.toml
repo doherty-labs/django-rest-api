@@ -73,6 +73,7 @@ typing-extensions = "^4.12.2"
 gevent = "^24.10.3"
 pyopenssl = "^24.3.0"
 ruff = "^0.8.4"
+types-boto3 = "^1.35.90"
 
 [tool.poetry.dev-dependencies]
 
@@ -92,10 +93,16 @@ exclude = [
     ".venv",
     "clients"
 ]
-ignore = ["D", "ANN"]
+ignore = ["D"]
 
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
 skip-magic-trailing-comma = false
 line-ending = "auto"
+
+[tool.ruff.lint.per-file-ignores]
+"**/tests/**" = ["ANN"]
+"**/migrations/*" = ["ANN"]
+"django_project/**" = ["ANN"]
+"**/management/**" = ["ANN"]

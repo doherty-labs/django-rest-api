@@ -7,10 +7,10 @@ logger = logging.getLogger(__name__)
 class HcpVaultSecrets:
     def __init__(
         self,
-    ):
+    ) -> None:
         self.secret_file_path = "/etc/secret-volume"  # noqa: S105
 
-    def get_secret(self, name, default_value) -> str:
+    def get_secret(self, name: str, default_value: str) -> str:
         logger.info("Reading secret from file")
         try:
             path = Path(Path(self.secret_file_path) / name)

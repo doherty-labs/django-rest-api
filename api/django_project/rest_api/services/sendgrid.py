@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 class EmailService:
-    def __init__(self):
+    def __init__(self) -> None:
         self.sendgrid_client = SendGridAPIClient(api_key=settings.SENDGRID_API_KEY)
 
     def send_email(

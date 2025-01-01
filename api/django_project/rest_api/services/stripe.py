@@ -4,7 +4,7 @@ from django_project import settings
 
 
 class StripeService:
-    def __init__(self):
+    def __init__(self) -> None:
         self.stripe_client = StripeClient(settings.STRIPE_API_KEY)
 
     def create_connect_account(self, email: str) -> Account:
