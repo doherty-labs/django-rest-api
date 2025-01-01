@@ -1,13 +1,11 @@
 {
   "recommendations": [
-    "yardensachs.copy-python-path",
     "ms-vscode-remote.remote-containers",
     "ms-azuretools.vscode-docker",
     "dbaeumer.vscode-eslint",
     "github.copilot",
     "eamodio.gitlens",
     "visualstudioexptteam.vscodeintellicode",
-    "ms-python.isort",
     "ms-toolsai.jupyter",
     "esbenp.prettier-vscode",
     "ms-python.vscode-pylance",

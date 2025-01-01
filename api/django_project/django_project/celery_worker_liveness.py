@@ -5,7 +5,7 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-LIVENESS_FILE = Path("/tmp/celery_worker_heartbeat") # noqa: S108
+LIVENESS_FILE = Path("/tmp/celery_worker_heartbeat")  # noqa: S108
 if not LIVENESS_FILE.is_file():
     logger.error("Celery liveness file NOT found.")
     sys.exit(1)

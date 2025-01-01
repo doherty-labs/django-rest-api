@@ -4,14 +4,14 @@ from functools import wraps
 import jwt
 import requests
 from django.contrib.auth import authenticate
-from django.http import JsonResponse
+from django.http import HttpRequest, JsonResponse
 from jwt import algorithms
 from rest_framework.exceptions import APIException, status
 
 from django_project.settings import AUTH0_DOMAIN, AUTH0_IDENTIFIER
 
 
-def jwt_get_username_from_payload_handler(payload):
+def jwt_get_username_from_payload_handler(payload: dict) -> str:
     username = payload.get("sub").replace("|", ".")
     authenticate(remote_user=username)
     return username
@@ -20,7 +20,7 @@ def jwt_get_username_from_payload_handler(payload):
 NOT_FOUND = "Public key not found."
 
 
-def jwt_decode_token(token):
+def jwt_decode_token(token: str) -> dict:
     header = jwt.get_unverified_header(token)
     jwks = requests.get(AUTH0_DOMAIN + ".well-known/jwks.json", timeout=30).json()
     public_key = None
@@ -43,7 +43,7 @@ def jwt_decode_token(token):
     )
 
 
-def get_token_auth_header(request):
+def get_token_auth_header(request: HttpRequest) -> str:
     """Obtains the Access Token from the Authorization Header"""
     auth = request.META.get("HTTP_AUTHORIZATION", None)
     parts = auth.split()

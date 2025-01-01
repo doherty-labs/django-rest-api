@@ -8,7 +8,7 @@ class HcpVaultSecrets:
     def __init__(
         self,
     ):
-        self.secret_file_path = "/etc/secret-volume" # noqa: S105
+        self.secret_file_path = "/etc/secret-volume"  # noqa: S105
 
     def get_secret(self, name, default_value) -> str:
         logger.info("Reading secret from file")
