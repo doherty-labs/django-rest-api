@@ -19,8 +19,8 @@ from celery.signals import beat_init, worker_process_init, worker_ready, worker_
 from opentelemetry.instrumentation.celery import CeleryInstrumentor
 
 # File for validating worker readiness
-READINESS_FILE = Path("/tmp/celery_ready") # noqa: S108
-HEARTBEAT_FILE = Path("/tmp/celery_worker_heartbeat") # noqa: S108
+READINESS_FILE = Path("/tmp/celery_ready")  # noqa: S108
+HEARTBEAT_FILE = Path("/tmp/celery_worker_heartbeat")  # noqa: S108
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "django_project.settings")
 django.setup()
