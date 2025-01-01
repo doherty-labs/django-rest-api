@@ -105,40 +105,28 @@ class ElasticSearchService(Generic[ElasticPydanticModel]):
             },
         ]
         current_index_names = self.get_index_names_with_alias(self.write_name)
-        for index_name in current_index_names:
-            actions.append(
-                {
-                    "remove": {
-                        "index": index_name,
-                        "alias": self.write_name,
-                    },
+        actions.extend(
+            {
+                "remove": {
+                    "index": index_name,
+                    "alias": self.write_name,
                 },
-            )
+            }
+            for index_name in current_index_names
+        )
         self.es.indices.update_aliases(actions=actions)
 
     def end_migration(self):
-        action = []
         current_index_names = self.get_index_names_with_alias(self.read_name)
-        for index_name in current_index_names:
-            action.append(
-                {
-                    "remove": {
-                        "index": index_name,
-                        "alias": self.read_name,
-                    },
-                },
-            )
-
         migrated_index_names = self.get_index_names_with_alias(self.write_name)
-        for index_name in migrated_index_names:
-            action.append(
-                {
-                    "add": {
-                        "index": index_name,
-                        "alias": self.read_name,
-                    },
-                },
-            )
+
+        action = [
+            {"remove": {"index": index_name, "alias": self.read_name}}
+            for index_name in current_index_names
+        ] + [
+            {"add": {"index": index_name, "alias": self.read_name}}
+            for index_name in migrated_index_names
+        ]
 
         self.es.indices.update_aliases(actions=action)
         for index_name in current_index_names:
@@ -150,26 +138,15 @@ class ElasticSearchService(Generic[ElasticPydanticModel]):
     def handle_migration_exception(self):
         action = []
         new_index_names = self.get_index_names_with_alias(self.write_name)
-        for index_name in new_index_names:
-            action.append(
-                {
-                    "remove": {
-                        "index": index_name,
-                        "alias": self.write_name,
-                    },
-                },
-            )
-
         current_index_names = self.get_index_names_with_alias(self.read_name)
-        for index_name in current_index_names:
-            action.append(
-                {
-                    "add": {
-                        "index": index_name,
-                        "alias": self.write_name,
-                    },
-                },
-            )
+
+        action = [
+            {"remove": {"index": index_name, "alias": self.write_name}}
+            for index_name in new_index_names
+        ] + [
+            {"add": {"index": index_name, "alias": self.write_name}}
+            for index_name in current_index_names
+        ]
 
         self.es.indices.update_aliases(actions=action)
         for index_name in new_index_names:
@@ -248,17 +225,15 @@ class ElasticSearchService(Generic[ElasticPydanticModel]):
         )
 
     def bulk_add_docs(self, documents: list[ElasticPydanticModel]) -> int:
-        actions = []
-        for doc in documents:
-            data_dict = doc.dict()
-            actions.append(
-                {
-                    "_index": self.write_name,
-                    "_op_type": "create",
-                    "_id": data_dict.get("id"),
-                    "_source": doc.dict(),
-                },
-            )
+        actions = [
+            {
+                "_index": self.write_name,
+                "_op_type": "create",
+                "_id": doc.model_dump().get("id"),
+                "_source": doc.model_dump(),
+            }
+            for doc in documents
+        ]
         success_count, fails = helpers.bulk(self.es, actions)
         if isinstance(fails, list) and len(fails) > 0:
             msg = f"Failed to bulk add docs: {json.dumps(fails)}"
