@@ -2,7 +2,7 @@ from geopy.geocoders import GoogleV3
 
 
 class GeoPyService:
-    def __init__(self, api_key: str):
+    def __init__(self, api_key: str) -> None:
         self.api_key = api_key
 
     def get_location_coordinates(self, components: dict) -> tuple[float, float]:

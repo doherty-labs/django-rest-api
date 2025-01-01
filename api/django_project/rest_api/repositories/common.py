@@ -15,7 +15,7 @@ class CommonModelRepo(Generic[PydanticType]):
     def __init__(
         self,
         es_instance: ElasticSearchService,
-    ):
+    ) -> None:
         self.es_instance = es_instance
 
     @abstractmethod
@@ -31,5 +31,5 @@ class CommonModelRepo(Generic[PydanticType]):
         pass
 
     @abstractmethod
-    def delete(self, model_id: int):
+    def delete(self, model_id: int) -> None:
         pass

@@ -1,4 +1,5 @@
 import boto3
+from botocore.client import BaseClient
 
 from django_project import settings
 
@@ -13,14 +14,14 @@ class ObjectStorageService:
         aws_secret_access_key: str,
         endpoint_url: str,
         region_name: str,
-    ):
+    ) -> None:
         self.bucket_name = bucket_name
         self.aws_access_key_id = aws_access_key_id
         self.aws_secret_access_key = aws_secret_access_key
         self.endpoint_url = endpoint_url
         self.region_name = region_name
 
-    def get_s3_client(self):
+    def get_s3_client(self) -> BaseClient:
         return boto3.client(
             "s3",
             aws_access_key_id=settings.BUCKET_KEY,
@@ -31,9 +32,9 @@ class ObjectStorageService:
 
     def generate_presigned_url(
         self,
-        client_method,
-        method_parameters,
-        expires_in,
+        client_method: str,
+        method_parameters: dict,
+        expires_in: int,
     ) -> str:
         return self.get_s3_client().generate_presigned_url(
             ClientMethod=client_method,

@@ -73,6 +73,7 @@ typing-extensions = "^4.12.2"
 gevent = "^24.10.3"
 pyopenssl = "^24.3.0"
 ruff = "^0.8.4"
+types-boto3 = "^1.35.90"
 
 [tool.poetry.dev-dependencies]
 
@@ -83,16 +84,13 @@ build-backend = "poetry.core.masonry.api"
 [tool.ruff.lint]
 select = ["ALL"]
 exclude = [
-    "migrations",
-    "__pycache__",
+    "**/tests/**",
+    "**/migrations/*",
+    "**/django_project/**",
+    "**/management/**",
     "manage.py",
-    "settings.py",
-    "env",
-    ".env",
-    ".venv",
-    "clients"
 ]
-ignore = ["D", "ANN"]
+ignore = ["D"]
 
 [tool.ruff.format]
 quote-style = "double"

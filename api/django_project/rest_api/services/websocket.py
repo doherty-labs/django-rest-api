@@ -12,7 +12,7 @@ class WebsocketEventTypes(StrEnum):
 class WebsocketService:
     def __init__(
         self,
-    ):
+    ) -> None:
         self.channel_layer = get_channel_layer()
 
     def send_message(
@@ -20,7 +20,7 @@ class WebsocketService:
         merchant_id: int,
         type_event: WebsocketEventTypes,
         message: BaseModel,
-    ):
+    ) -> None:
         async_to_sync(self.channel_layer.group_send)(
             "merchant_" + str(merchant_id),
             {
