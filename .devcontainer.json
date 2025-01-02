@@ -6,55 +6,9 @@
   "customizations": {
     "vscode": {
       "settings": {
-        "mypy.configFile": "./mypy.ini",
-        "flake8.args": ["--config=${workspaceFolder}/.flake8"],
-        "autopep8.args": ["--config=${workspaceFolder}/pyproject.toml"],
-        "mypy.runUsingActiveInterpreter": true,
-        "python.defaultInterpreterPath": "/usr/local/bin/python",
         "python.testing.pytestArgs": ["api"],
         "python.testing.pytestEnabled": false,
         "python.testing.unittestEnabled": true,
-        "emeraldwalk.runonsave": {
-          "autoClearConsole": true,
-          "commands": [
-            {
-              "match": "\\.py$",
-              "cmd": "ruff format ${file} --config ${workspaceFolder}/api/django_project/pyproject.toml"
-            },
-            {
-              "match": "\\.json$",
-              "cmd": "prettier -w ${file}"
-            },
-            {
-              "match": "\\.js$",
-              "cmd": "prettier -w ${file}"
-            },
-            {
-              "match": "\\.ts$",
-              "cmd": "prettier -w ${file}"
-            },
-            {
-              "match": "\\.tsx$",
-              "cmd": "prettier -w ${file}"
-            },
-            {
-              "match": "\\.css$",
-              "cmd": "prettier -w ${file}"
-            },
-            {
-              "match": "\\.scss$",
-              "cmd": "prettier -w ${file}"
-            },
-            {
-              "match": "\\.yaml$",
-              "cmd": "prettier -w ${file}"
-            },
-            {
-              "match": "\\.yml$",
-              "cmd": "prettier -w ${file}"
-            }
-          ]
-        },
         "files.exclude": {
           "**/__pycache__": true,
           "**/*.pyc": true,
@@ -75,10 +29,20 @@
           "**/docs/_build": true,
           "**/node_modules/": true,
           "**/.next/": true
-        }
+        },
+        "[python]": {
+          "editor.formatOnSave": true,
+            "editor.codeActionsOnSave": {
+                "source.fixAll": "explicit"
+            }
+        },
+        "ruff.configuration": "${workspaceFolder}/api/django_project/pyproject.toml",
+        "ruff.organizeImports": true,
+        "ruff.fixAll": true,
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "charliermarsh.ruff"
       },
       "extensions": [
-        "yardensachs.copy-python-path",
         "ms-vscode-remote.remote-containers",
         "ms-azuretools.vscode-docker",
         "dbaeumer.vscode-eslint",
@@ -89,8 +53,7 @@
         "esbenp.prettier-vscode",
         "ms-python.vscode-pylance",
         "ms-python.python",
-        "charliermarsh.ruff",
-        "emeraldwalk.runonsave"
+        "charliermarsh.ruff"
       ]
     }
   }

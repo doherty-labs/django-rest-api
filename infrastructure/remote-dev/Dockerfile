@@ -19,7 +19,6 @@ RUN apt-get install -y apt-transport-https curl software-properties-common
 RUN curl -sL https://deb.nodesource.com/setup_20.x | bash -
 
 RUN apt-get install -y nodejs 
-RUN npm install --global yarn
 RUN npm install --global prettier
 RUN apt-get install nano -y
 RUN apt-get install vim -y
@@ -33,20 +32,12 @@ COPY ./ /usr/src/app/
 
 WORKDIR /usr/src/app/api/django_project
 RUN poetry env use python3.13
-RUN poetry config virtualenvs.create false
+RUN poetry config virtualenvs.create true
+RUN poetry config virtualenvs.in-project false
 RUN poetry install
 
 RUN npm install -g openapi-typescript@7.0.2
 RUN pip install openapi-generator-cli[jdk4py]
-
-WORKDIR /usr/src/app/web-app/merchant
-RUN yarn install
-
-WORKDIR /usr/src/app/web-app/ops
-RUN yarn install
-
-WORKDIR /usr/src/app/web-app/storefront
-RUN yarn install
 
 WORKDIR /usr/src/app
 RUN mkdir -p /logs/
