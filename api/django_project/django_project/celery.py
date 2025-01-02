@@ -42,10 +42,10 @@ class LivenessProbe(bootsteps.StartStopStep):
             priority=10,
         )
 
-    def stop(self):
+    def stop(self, worker):
         HEARTBEAT_FILE.unlink(missing_ok=True)
 
-    def update_heartbeat_file(self):
+    def update_heartbeat_file(self, worker):
         HEARTBEAT_FILE.touch()
 
 
