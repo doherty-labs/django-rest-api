@@ -73,7 +73,7 @@ typing-extensions = "^4.12.2"
 gevent = "^24.10.3"
 pyopenssl = "^24.3.0"
 ruff = "^0.8.4"
-types-boto3 = "^1.35.90"
+types-boto3 = "^1.36.11"
 pre-commit = "^4.0.1"
 
 [tool.poetry.dev-dependencies]
