@@ -5,31 +5,39 @@
 
 version: 2
 updates:
-  - package-ecosystem: "pip" # See documentation for possible values
-    directory: "/api/django_project" # Location of package manifests
+  - package-ecosystem: "pip"
+    directory: "/api/django_project"
     schedule:
-      interval: "weekly"
-  - package-ecosystem: "docker" # See documentation for possible values
-    directory: "/infrastructure/rest-api" # Location of package manifests
+      interval: "daily"
+  - package-ecosystem: "docker"
+    directory: "/infrastructure/rest-api"
     schedule:
-      interval: "weekly"
-  - package-ecosystem: "docker" # See documentation for possible values
-    directory: "/infrastructure/celery-worker" # Location of package manifests
+      interval: "daily"
+  - package-ecosystem: "docker"
+    directory: "/infrastructure/web-app"
     schedule:
-      interval: "weekly"
-  - package-ecosystem: "docker" # See documentation for possible values
-    directory: "/infrastructure/celery-flower" # Location of package manifests
+      interval: "daily"
+  - package-ecosystem: "docker"
+    directory: "/infrastructure/celery-worker"
     schedule:
-      interval: "weekly"
-  - package-ecosystem: "docker" # See documentation for possible values
-    directory: "/infrastructure/celery-scheduler" # Location of package manifests
+      interval: "daily"
+  - package-ecosystem: "docker"
+    directory: "/infrastructure/celery-flower"
     schedule:
-      interval: "weekly"
+      interval: "daily"
+  - package-ecosystem: "docker"
+    directory: "/infrastructure/celery-scheduler"
+    schedule:
+      interval: "daily"
   - package-ecosystem: "docker"
     directory: "/infrastructure/remote-dev"
     schedule:
-      interval: "weekly"
+      interval: "daily"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "daily"
+  - package-ecosystem: "npm"
+    directory: "/web-app/landing/"
+    schedule:
+      interval: "daily"
