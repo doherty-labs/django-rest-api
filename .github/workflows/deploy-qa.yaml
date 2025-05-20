@@ -30,9 +30,9 @@ jobs:
         with:
           export-env: false
         env:
-          DIGIALOCEAN_API_TOKEN: op://provo-dev/plotter/digitalocean/digitalocean_token
-          DOCKER_REG_URL: op://provo-dev/plotter/digitalocean/docker_server_url
-          DOCKER_REG_NAME: op://provo-dev/plotter/digitalocean/docker_name
+          DIGIALOCEAN_API_TOKEN: op://vault/project/digitalocean/digitalocean_token
+          DOCKER_REG_URL: op://vault/project/digitalocean/docker_server_url
+          DOCKER_REG_NAME: op://vault/project/digitalocean/docker_name
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
