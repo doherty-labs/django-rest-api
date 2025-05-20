@@ -1,5 +1,5 @@
 Deploy Django to DigitalOcean Kubernetes
-https://youtu.be/-md_6nmogNc
+https://youtu.be/fipPQaJWfCg?si=hSAtEn_9-bTAz8za
 
 # Template Overview
 
@@ -25,6 +25,6 @@ https://youtu.be/-md_6nmogNc
 
 https://github.com/doherty-labs/helm-charts
 
-# Terraform Modules
+# Pulumi Automation API
 
-https://github.com/doherty-labs/terraform-module-repo
+https://github.com/doherty-labs/pulumi-django-celery
