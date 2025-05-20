@@ -1,7 +1,6 @@
+from django.conf import settings
 from twilio.rest import Client
 from twilio.rest.api.v2010.account.message import MessageInstance
-
-from django_project import settings
 
 
 class SMSNotificationService:

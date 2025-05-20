@@ -1,9 +1,8 @@
 import logging
 
+from django.conf import settings
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail, To
-
-from django_project import settings
 
 logger = logging.getLogger(__name__)
 

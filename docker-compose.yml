@@ -9,6 +9,8 @@ services:
       - ASYNC_MODE=True
       - GUNICORN_WORKERS=1
       - DJANGO_SETTINGS_MODULE=django_project.settings
+    env_file:
+      - .env
     depends_on:
       - celery-worker
       - flower
@@ -24,7 +26,8 @@ services:
     build:
       context: .
       dockerfile: infrastructure/celery-flower/Dockerfile
-    env_file: .env
+    env_file:
+      - .env
     volumes:
       - ./api/django_project:/usr/src/app/django
     depends_on:
@@ -42,12 +45,8 @@ services:
     build:
       context: .
       dockerfile: infrastructure/rest-api/Dockerfile
-    environment:
-      - GUNICORN_WORKERS=1
-      - DJANGO_SETTINGS_MODULE=django_project.settings
-      - ENABLE_GEVENT_PATCH=True
-      - DEBUG_MODE=True
-      - GEVENT_SUPPORT=True
+    env_file:
+      - .env
     depends_on:
       - celery-worker
       - flower
@@ -77,8 +76,6 @@ services:
       - elastic
     volumes:
       - ./:/usr/src/app
-    ports:
-      - "3000:3000"
     networks:
       - django
   celery-worker:
@@ -86,7 +83,8 @@ services:
     build:
       context: .
       dockerfile: infrastructure/celery-worker/Dockerfile
-    env_file: .env
+    env_file:
+      - .env
     volumes:
       - ./api/django_project:/usr/src/app/django
     depends_on:
@@ -135,7 +133,7 @@ services:
     depends_on:
       - postgres
   elastic:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.5.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.0.0
     container_name: elasticsearch
     deploy:
       resources:
@@ -168,7 +166,8 @@ services:
       - django
   celery-scheduler:
     restart: always
-    env_file: .env
+    env_file:
+      - .env
     build:
       context: .
       dockerfile: infrastructure/celery-scheduler/Dockerfile
@@ -182,10 +181,31 @@ services:
       - elastic
     networks:
       - django
+  landing-web-app:
+    restart: always
+    build:
+      context: .
+      dockerfile: infrastructure/web-app/Dockerfile
+      args:
+        - WEBAPP_PATH=./web-app/landing
+        - APP_ENV=development
+        - OP_SERVICE_ACCOUNT_TOKEN=${OP_SERVICE_ACCOUNT_TOKEN}
+    env_file:
+      - .env
+    depends_on:
+      - celery-worker
+      - flower
+      - rest-api
+    volumes:
+      - /usr/src/app/web-app/node_modules
+      - ./web-app/landing:/usr/src/app/web-app
+    networks:
+      - django
+    ports:
+      - "3000:3000"
 networks:
   django:
     driver: bridge
-
 volumes:
   postgres:
   pgadmin:

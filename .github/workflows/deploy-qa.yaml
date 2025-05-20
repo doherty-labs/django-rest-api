@@ -1,15 +1,49 @@
 name: Deploy QA
-
 concurrency:
   group: main-qa-deploy
   cancel-in-progress: false
-
 on:
   push:
     branches:
       - main
-
 jobs:
+  cleanup_docker_reg:
+    name: Docker Reg Cleanup
+    needs: [deploy_k8]
+    runs-on: ubuntu-latest
+    environment: qa
+    strategy:
+      matrix:
+        include:
+          - {dockerfile: "./infrastructure/rest-api/Dockerfile", tag: "qa-rest-api"}
+          - {dockerfile: "./infrastructure/celery-worker/Dockerfile", tag: "qa-celery-worker"}
+          - {dockerfile: "./infrastructure/celery-flower/Dockerfile", tag: "qa-celery-flower"}
+          - {dockerfile: "./infrastructure/celery-scheduler/Dockerfile", tag: "qa-celery-scheduler"}
+          - {dockerfile: "./infrastructure/web-app/Dockerfile", tag: "qa-landing"}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: 1password/load-secrets-action/configure@v2
+        with:
+          service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+      - uses: 1password/load-secrets-action@v2
+        id: op-load-secret
+        with:
+          export-env: false
+        env:
+          DIGIALOCEAN_API_TOKEN: op://vault/project/digitalocean/digitalocean_token
+          DOCKER_REG_URL: op://vault/project/digitalocean/docker_server_url
+          DOCKER_REG_NAME: op://vault/project/digitalocean/docker_name
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ steps.op-load-secret.outputs.DIGIALOCEAN_API_TOKEN }}
+      - name: Login to registry
+        run: doctl registry login
+      - name: Remove old images from Container Registry
+        uses: ripplr-io/docr-image-remove@v1
+        with:
+          image_repository: ${{ matrix.tag }}
+          buffer_size: 10
   push_docker_image_to_github_packages:
     name: Build and push docker images
     runs-on: ubuntu-latest
@@ -17,35 +51,35 @@ jobs:
     strategy:
       matrix:
         include:
-          - {
-              dockerfile: "./infrastructure/rest-api/Dockerfile",
-              tag: "qa-rest-api",
-            }
-          - {
-              dockerfile: "./infrastructure/celery-worker/Dockerfile",
-              tag: "qa-celery-worker",
-            }
-          - {
-              dockerfile: "./infrastructure/celery-flower/Dockerfile",
-              tag: "qa-celery-flower",
-            }
-          - {
-              dockerfile: "./infrastructure/celery-scheduler/Dockerfile",
-              tag: "qa-celery-scheduler",
-            }
+          - {dockerfile: "./infrastructure/rest-api/Dockerfile", tag: "qa-rest-api"}
+          - {dockerfile: "./infrastructure/celery-worker/Dockerfile", tag: "qa-celery-worker"}
+          - {dockerfile: "./infrastructure/celery-flower/Dockerfile", tag: "qa-celery-flower"}
+          - {dockerfile: "./infrastructure/celery-scheduler/Dockerfile", tag: "qa-celery-scheduler"}
+          - {dockerfile: "./infrastructure/web-app/Dockerfile", tag: "qa-landing", webapp_path: "./web-app/landing"}
     steps:
       - uses: actions/checkout@v4
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
+      - uses: 1password/load-secrets-action/configure@v2
         with:
-          registry: ${{ secrets.DOCKER_REG_URL }}
-          username: ${{ secrets.DOCKER_REG_USERNAME }}
-          password: ${{ secrets.DOCKER_REG_PASSWORD }}
+          service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+      - uses: 1password/load-secrets-action@v2
+        id: op-load-secret
+        with:
+          export-env: false
+        env:
+          DIGIALOCEAN_API_TOKEN: op://vault/project/digitalocean/digitalocean_token
+          DOCKER_REG_URL: op://vault/project/digitalocean/docker_server_url
+          DOCKER_REG_NAME: op://vault/project/digitalocean/docker_name
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ steps.op-load-secret.outputs.DIGIALOCEAN_API_TOKEN }}
+      - name: Login to registry
+        run: doctl registry login
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ secrets.DOCKER_REG_URL }}/${{ secrets.DOCKER_REG_NAME }}/${{ matrix.tag }}
+          images: ${{ steps.op-load-secret.outputs.DOCKER_REG_URL }}/${{ steps.op-load-secret.outputs.DOCKER_REG_NAME }}/${{ matrix.tag }}
           tags: |
             type=sha
       - name: Set outputs
@@ -59,35 +93,156 @@ jobs:
           file: ${{ matrix.dockerfile }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            WEBAPP_PATH=${{ matrix.webapp_path }}
+            APP_ENV=test
+            NEXT_PUBLIC_DATADOG_VERSION=${{ steps.vars.outputs.sha_short }}
+            OP_SERVICE_ACCOUNT_TOKEN=${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+  cdn_upload:
+    name: Upload webapp to CDN
+    runs-on: ubuntu-latest
+    environment: qa
+    strategy:
+      matrix:
+        include:
+          - {folder: "./web-app/landing/", service: "landing"}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+      - name: Use Node.js 23
+        uses: actions/setup-node@v4
+        with:
+          node-version: 23
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - name: Install 1Password CLI
+        uses: 1password/install-cli-action@v1
+      - name: Install dependencies
+        working-directory: ${{ matrix.folder }}
+        run: pnpm install
+      - name: Set outputs
+        id: vars
+        run: echo "sha_short=sha-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      - name: Build webapp
+        working-directory: ${{ matrix.folder }}
+        run: |
+          export NEXT_PUBLIC_DATADOG_VERSION=${{ steps.vars.outputs.sha_short }}
+          export APP_ENV=test
+          export OP_SERVICE_ACCOUNT_TOKEN=${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          op inject -i env.test.tmpl -o .env.production --force
+          pnpm build
+      - uses: 1password/load-secrets-action/configure@v2
+        with:
+          service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+      - uses: 1password/load-secrets-action@v2
+        id: op-load-secret
+        with:
+          export-env: false
+        env:
+          CDN_ACCESS_KEY: op://vault/project/digitalocean/cdn_bucket_access_key
+          CDN_SECRET_KEY: op://vault/project/digitalocean/cdn_bucket_secret_key
+          CDN_SPACE_NAME: op://vault/project/digitalocean/cdn_bucket_name
+          CDN_REGION: op://vault/project/digitalocean/cdn_bucket_region
+      - uses: BetaHuhn/do-spaces-action@v2
+        with:
+          access_key: ${{ steps.op-load-secret.outputs.CDN_ACCESS_KEY }}
+          secret_key: ${{ steps.op-load-secret.outputs.CDN_SECRET_KEY }}
+          space_name: ${{ steps.op-load-secret.outputs.CDN_SPACE_NAME }}
+          space_region: ${{ steps.op-load-secret.outputs.CDN_REGION }}
+          source: ${{ matrix.folder }}/.next/
+          out_dir: webapp/${{ matrix.service }}/${{ steps.vars.outputs.sha_short }}/_next/
+  datadog_sourcemaps:
+    name: Datadog Sourcemaps frontend
+    runs-on: ubuntu-latest
+    environment: qa
+    strategy:
+      matrix:
+        include:
+          - {folder: "./web-app/landing/", service: "landing"}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+      - name: Use Node.js 23
+        uses: actions/setup-node@v4
+        with:
+          node-version: 23
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - name: Install 1Password CLI
+        uses: 1password/install-cli-action@v1
+      - name: Install dependencies
+        working-directory: ${{ matrix.folder }}
+        run: pnpm install
+      - name: Set outputs
+        id: vars
+        run: echo "sha_short=sha-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      - uses: 1password/load-secrets-action/configure@v2
+        with:
+          service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+      - uses: 1password/load-secrets-action@v2
+        id: op-load-secret
+        with:
+          export-env: false
+        env:
+          DATADOG_API_KEY: op://vault/project/datadog/api_key
+          DATADOG_SITE: op://vault/project/datadog/site
+      - name: Datadog Upload Sourcemaps
+        working-directory: ${{ matrix.folder }}
+        env:
+          BUILD_NUMBER: ${{ steps.vars.outputs.sha_short }}
+          DATADOG_API_KEY: ${{ steps.op-load-secret.outputs.DATADOG_API_KEY }}
+          DATADOG_SITE: ${{ steps.op-load-secret.outputs.DATADOG_SITE }}
+          DATADOG_SERVICE: ${{ matrix.service }}
+        run: |
+          export NEXT_PUBLIC_DATADOG_VERSION=${{ steps.vars.outputs.sha_short }}
+          export APP_ENV=test
+          export OP_SERVICE_ACCOUNT_TOKEN=${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          op inject -i env.test.tmpl -o .env.production --force
+          pnpm build
+          npx datadog-ci sourcemaps upload ./.next/static/chunks/ --service="$DATADOG_SERVICE" --release-version="$BUILD_NUMBER" --minified-path-prefix=/_next/static/chunk
   deploy_k8:
-    needs: push_docker_image_to_github_packages
+    needs: [push_docker_image_to_github_packages, cdn_upload, datadog_sourcemaps]
     name: Deploy to Kubernetes
     runs-on: ubuntu-latest
     environment: qa
     steps:
+      - uses: azure/setup-helm@v4.3.0
       - uses: actions/checkout@v4
-      - uses: azure/setup-helm@v4.2.0
+      - uses: 1password/load-secrets-action/configure@v2
+        with:
+          service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+      - uses: 1password/load-secrets-action@v2
+        id: op-load-secret
+        with:
+          export-env: false
+        env:
+          DIGIALOCEAN_API_TOKEN: op://vault/project/digitalocean/digitalocean_token
+          DOCKER_REG_URL: op://vault/project/digitalocean/docker_server_url
+          DOCKER_REG_NAME: op://vault/project/digitalocean/docker_name
+          CLUSTER_NAME: op://vault/project/digitalocean/k8_name
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
-          token: ${{ secrets.DOCKER_REG_PASSWORD }}
+          token: ${{ steps.op-load-secret.outputs.DIGIALOCEAN_API_TOKEN }}
       - name: Set outputs
         id: vars
         run: echo "sha_short=sha-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
       - name: Save DigitalOcean kubeconfig with short-lived credentials
-        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 3600 ${{ secrets.CLUSTER_NAME }}
+        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 3600 ${{ steps.op-load-secret.outputs.CLUSTER_NAME }}
       - name: Replace reg url
         uses: richardrigutins/replace-in-files@v2
         with:
           files: "./infrastructure/helm-values.yaml"
           search-text: "${DOCKER_REG_URL}"
-          replacement-text: ${{ secrets.DOCKER_REG_URL }}
+          replacement-text: ${{ steps.op-load-secret.outputs.DOCKER_REG_URL }}
       - name: Replace reg name
         uses: richardrigutins/replace-in-files@v2
         with:
           files: "./infrastructure/helm-values.yaml"
           search-text: "${DOCKER_REG_NAME}"
-          replacement-text: ${{ secrets.DOCKER_REG_NAME }}
+          replacement-text: ${{ steps.op-load-secret.outputs.DOCKER_REG_NAME }}
       - name: Replace sha version
         uses: richardrigutins/replace-in-files@v2
         with:
@@ -129,13 +284,25 @@ jobs:
         with:
           files: "./infrastructure/helm-values.yaml"
           search-text: "${REST_API_HOSTNAME}"
-          replacement-text: "api-qa.dohertylabs.com"
+          replacement-text: "qa-api.xxxxx.com"
       - name: Replace flower hostname
         uses: richardrigutins/replace-in-files@v2
         with:
           files: "./infrastructure/helm-values.yaml"
           search-text: "${FLOWER_HOSTNAME}"
-          replacement-text: "flower-qa.dohertylabs.com"
+          replacement-text: "qa-flower.xxxx.com"
+      - name: Replace landing image
+        uses: richardrigutins/replace-in-files@v2
+        with:
+          files: "./infrastructure/helm-values.yaml"
+          search-text: "${LANDING_IMAGE_NAME}"
+          replacement-text: "qa-landing"
+      - name: Replace landing host
+        uses: richardrigutins/replace-in-files@v2
+        with:
+          files: "./infrastructure/helm-values.yaml"
+          search-text: "${LANDING_HOSTNAME}"
+          replacement-text: "qa-landing.xxxx.com"
       - name: Replace env
         uses: richardrigutins/replace-in-files@v2
         with:
@@ -159,4 +326,4 @@ jobs:
       - name: Delete old create-superuser
         run: kubectl delete -n default job django-create-superuser --cascade=background --ignore-not-found
       - name: Install Helm chart
-        run: helm upgrade --install django-celery-api doherty-labs/django-celery-api -f ./infrastructure/helm-values.yaml --debug --wait
+        run: helm upgrade --install django-celery-api doherty-labs/django-celery-api -f ./infrastructure/helm-values.yaml --debug --wait --timeout 1800s

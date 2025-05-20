@@ -1,39 +1,32 @@
 from __future__ import annotations
 
 import json
+import logging
 import uuid
 from functools import wraps
-from typing import TYPE_CHECKING, Any, Callable, Generic, Self, TypeVar
+from typing import Any, Callable, Generic, Self, TypeVar
 
+from elastic_transport import ObjectApiResponse
 from elasticsearch import Elasticsearch, helpers
+from elasticsearch_dsl import Search
+from injector import Inject
 from pydantic import BaseModel
-
-if TYPE_CHECKING:
-    from elastic_transport import ObjectApiResponse
-    from injector import Inject
-    from redis import Redis
 
 FuncT = TypeVar("FuncT", bound=Callable[..., Any])
 ElasticPydanticModel = TypeVar("ElasticPydanticModel", bound=BaseModel)
+logger = logging.getLogger(__name__)
 
 
 class ElasticSearchService(Generic[ElasticPydanticModel]):
     es_index_name: str
     pydantic_model: ElasticPydanticModel
     es_index_mapping: dict
-    es_settings: dict
 
     def __init__(
         self,
         es: Inject[Elasticsearch],
-        redis: Inject[Redis],
     ) -> None:
         self.es = es
-        self.redis = redis
-        self.lock = self.redis.lock(
-            f"{self.es_index_name}_index_lock",
-            timeout=60 * 60 * 2,
-        )
 
     @staticmethod
     def index_check_decorator(func: FuncT) -> FuncT:
@@ -53,6 +46,10 @@ class ElasticSearchService(Generic[ElasticPydanticModel]):
     def write_name(self) -> str:
         return self.es_index_name + ".write"
 
+    @property
+    def search_dsl(self) -> str:
+        return Search(using=self.es, index=self.es_index_name)
+
     def get_new_index_name(self) -> str:
         guid = str(uuid.uuid4())
         return f"{self.es_index_name}_{guid}"
@@ -69,10 +66,21 @@ class ElasticSearchService(Generic[ElasticPydanticModel]):
         result = self.es.indices.create(
             index=index_name,
             mappings=self.es_index_mapping,
-            settings=self.es_settings,
         )
         self.es.indices.update_aliases(
             actions=[
+                {
+                    "remove": {
+                        "index": "*",
+                        "alias": self.read_name,
+                    },
+                },
+                {
+                    "remove": {
+                        "index": "*",
+                        "alias": self.write_name,
+                    },
+                },
                 {
                     "add": {
                         "index": index_name,
@@ -83,77 +91,79 @@ class ElasticSearchService(Generic[ElasticPydanticModel]):
                     "add": {
                         "index": index_name,
                         "alias": self.write_name,
+                        "is_write_index": True,
                     },
                 },
             ],
         )
         return result
 
-    def begin_migration(self) -> None:
-        self.lock.acquire(blocking=True)
+    def create_migration_index(self) -> ObjectApiResponse:
         new_index_name = self.get_new_index_name()
-        self.es.indices.create(
+        result = self.es.indices.create(
             index=new_index_name,
             mappings=self.es_index_mapping,
-            settings=self.es_settings,
         )
+
         actions = [
+            {
+                "remove": {
+                    "index": "*",
+                    "alias": self.write_name,
+                },
+            },
             {
                 "add": {
                     "index": new_index_name,
                     "alias": self.write_name,
+                    "is_write_index": True,
                 },
             },
         ]
-        current_index_names = self.get_index_names_with_alias(self.write_name)
-        actions.extend(
-            {
-                "remove": {
-                    "index": index_name,
-                    "alias": self.write_name,
+
+        read_index_names = self.get_index_names_with_alias(self.read_name)
+
+        if len(read_index_names) == 0:
+            actions.append(
+                {
+                    "add": {
+                        "index": new_index_name,
+                        "alias": self.read_name,
+                    },
                 },
-            }
-            for index_name in current_index_names
+            )
+
+        self.es.indices.update_aliases(
+            actions=actions,
         )
-        self.es.indices.update_aliases(actions=actions)
 
-    def end_migration(self) -> None:
-        current_index_names = self.get_index_names_with_alias(self.read_name)
-        migrated_index_names = self.get_index_names_with_alias(self.write_name)
+        return result
 
-        action = [
-            {"remove": {"index": index_name, "alias": self.read_name}}
-            for index_name in current_index_names
-        ] + [
-            {"add": {"index": index_name, "alias": self.read_name}}
-            for index_name in migrated_index_names
-        ]
+    def complete_migration(self) -> ObjectApiResponse:
+        old_index_names = self.get_index_names_with_alias(self.read_name)
+        new_index_name = self.get_index_names_with_alias(self.write_name)[0]
+        for old_index_name in old_index_names:
+            if old_index_name == new_index_name:
+                continue
 
-        self.es.indices.update_aliases(actions=action)
-        for index_name in current_index_names:
-            self.es.indices.delete(index=index_name, ignore_unavailable=True)
+            self.es.indices.delete(index=old_index_name, ignore_unavailable=True)
 
-        self.refresh_index()
-        self.lock.release()
-
-    def handle_migration_exception(self) -> None:
-        action = []
-        new_index_names = self.get_index_names_with_alias(self.write_name)
-        current_index_names = self.get_index_names_with_alias(self.read_name)
-
-        action = [
-            {"remove": {"index": index_name, "alias": self.write_name}}
-            for index_name in new_index_names
-        ] + [
-            {"add": {"index": index_name, "alias": self.write_name}}
-            for index_name in current_index_names
-        ]
-
-        self.es.indices.update_aliases(actions=action)
-        for index_name in new_index_names:
-            self.es.indices.delete(index=index_name, ignore_unavailable=True)
-
-        self.lock.release()
+        return self.es.indices.update_aliases(
+            actions=[
+                {
+                    "remove": {
+                        "index": "*",
+                        "alias": self.read_name,
+                    },
+                },
+                {
+                    "add": {
+                        "index": new_index_name,
+                        "alias": self.read_name,
+                    },
+                },
+            ],
+        )
 
     def update_index_mapping(self) -> ObjectApiResponse:
         return self.es.indices.put_mapping(
@@ -162,10 +172,20 @@ class ElasticSearchService(Generic[ElasticPydanticModel]):
         )
 
     def delete_index(self) -> ObjectApiResponse:
+        self.es.indices.delete_alias(
+            index="*",
+            name=self.read_name,
+        )
+        self.es.indices.delete_alias(
+            index="*",
+            name=self.write_name,
+        )
         return self.es.indices.delete(index=self.write_name, ignore_unavailable=True)
 
     def check_index_exists(self) -> ObjectApiResponse:
-        return self.es.indices.exists(index=self.write_name)
+        return self.es.indices.exists(index=self.write_name) and self.es.indices.exists(
+            index=self.read_name,
+        )
 
     def refresh_index(self) -> ObjectApiResponse:
         return self.es.indices.refresh(index=self.write_name)
@@ -179,20 +199,16 @@ class ElasticSearchService(Generic[ElasticPydanticModel]):
         model_id: str,
         doc_data: ElasticPydanticModel,
     ) -> ObjectApiResponse | None:
-        if not self.es.exists(index=self.write_name, id=id):
-            return self.es.index(
-                index=self.write_name,
-                id=model_id,
-                document=doc_data.dict(),
-                refresh=True,
-            )
-        return None
+        return self.es.index(
+            index=self.write_name,
+            id=model_id,
+            document=doc_data.model_dump(),
+            refresh=True,
+        )
 
     @index_check_decorator
     def remove(self, model_id: str) -> ObjectApiResponse | None:
-        if self.es.exists(index=self.write_name, id=model_id):
-            return self.es.delete(index=self.write_name, id=model_id, refresh=True)
-        return None
+        self.es.delete(index=self.write_name, id=model_id, refresh=True)
 
     @index_check_decorator
     def get(self, model_id: str) -> ElasticPydanticModel | None:
@@ -237,7 +253,7 @@ class ElasticSearchService(Generic[ElasticPydanticModel]):
         actions = [
             {
                 "_index": self.write_name,
-                "_op_type": "create",
+                "_op_type": "index",
                 "_id": doc.model_dump().get("id"),
                 "_source": doc.model_dump(),
             }

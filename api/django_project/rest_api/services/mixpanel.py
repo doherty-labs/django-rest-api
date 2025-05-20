@@ -1,6 +1,5 @@
+from django.conf import settings
 from mixpanel import Mixpanel
-
-from django_project import settings
 
 
 class MixpanelService:

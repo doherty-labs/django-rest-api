@@ -1,4 +1,4 @@
-FROM python:3.13.1
+FROM python:3.13.3
 
 EXPOSE 8000
 ENV DEBIAN_FRONTEND noninteractive
@@ -27,6 +27,7 @@ RUN poetry install --no-interaction --no-ansi
 WORKDIR /usr/src/app
 COPY ./infrastructure/rest-api/entry.sh ./
 RUN mkdir -p /logs/
+RUN mkdir -p /usr/src/app/tempFileStore/
 
 COPY ./api/django_project ./django
 RUN ["chmod", "+x", "./entry.sh"]

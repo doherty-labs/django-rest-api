@@ -10,7 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-import os  # noqa: E402
+import os
+
+from rest_api.services.onepassword import OnePasswordService  # noqa: E402
 
 if os.environ.get("ENABLE_GEVENT_PATCH", "False").lower().strip() == "true":
     from gevent import monkey  # noqa: E402
@@ -36,6 +38,13 @@ from opentelemetry.instrumentation.requests import RequestsInstrumentor
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+OP_SERVICE_ACCOUNT_TOKEN = os.environ.get("OP_SERVICE_ACCOUNT_TOKEN", "")
+LOCAL_ONEPASSWORD_REFERENCE = f"op://vault/project/"
+DEV_ONEPASSWORD_REFERENCE = f"op://vault/project/"
+PROD_ONEPASSWORD_REFERENCE = f"op://vault/project/"
+
+
+onepassword_service = OnePasswordService(token=OP_SERVICE_ACCOUNT_TOKEN)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -47,7 +56,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 CORS_ALLOW_ALL_ORIGINS = True
-CSRF_TRUSTED_ORIGINS = ["http://localhost:3000"]
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:3002",
+    "http://localhost:3003",
+]
 
 ASYNC_MODE = os.environ.get("ASYNC_MODE", "False").lower().strip() == "true"
 
@@ -219,39 +232,79 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 50,
 }
 
-GMAPS_API_KEY = os.environ.get("GMAPS_API_KEY", "")
+BUCKET_NAME = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "digitalocean/bucket_name"
+)
+BUCKET_KEY = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "digitalocean/bucket_access_key"
+)
+BUCKET_SECRET = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "digitalocean/bucket_secret_key"
+)
 
-BUCKET_NAME = os.environ.get("BUCKET_NAME", "")
-BUCKET_KEY = os.environ.get("BUCKET_KEY", "")
-BUCKET_SECRET = os.environ.get("BUCKET_SECRET", "")
-BUCKET_ENDPOINT = "https://" + os.environ.get("BUCKET_ENDPOINT", "")
-BUCKET_REGION = os.environ.get("BUCKET_REGION", "uk")
+do_bucket_endpoint = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "digitalocean/bucket_endpoint"
+)
+BUCKET_ENDPOINT = "https://" + do_bucket_endpoint if do_bucket_endpoint else None
+BUCKET_REGION = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "digitalocean/bucket_region"
+)
 
 
-CDN_BUCKET_NAME = os.environ.get("CDN_BUCKET_NAME", "")
-CDN_BUCKET_KEY = os.environ.get("CDN_BUCKET_KEY", "")
-CDN_BUCKET_SECRET = os.environ.get("CDN_BUCKET_SECRET", "")
-CDN_BUCKET_ENDPOINT = "https://" + os.environ.get("CDN_BUCKET_ENDPOINT", "")
-CDN_BUCKET_REGION = os.environ.get("CDN_BUCKET_REGION", "uk")
+CDN_BUCKET_NAME = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "digitalocean/cdn_bucket_name"
+)
+CDN_BUCKET_KEY = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "digitalocean/cdn_bucket_access_key"
+)
+CDN_BUCKET_SECRET = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "digitalocean/cdn_bucket_secret_key"
+)
+do_cdn_bucket_endpoint = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "digitalocean/cdn_bucket_endpoint"
+)
+CDN_BUCKET_ENDPOINT = (
+    "https://" + do_cdn_bucket_endpoint if do_cdn_bucket_endpoint else None
+)
+CDN_BUCKET_REGION = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "digitalocean/cdn_bucket_region"
+)
 
 
 LOGIN_URL = "/admin/login/"
-AUTH0_DOMAIN = os.environ.get("AUTH_DOMAIN", "")
-AUTH0_IDENTIFIER = os.environ.get("AUTH_IDENTIFIER", "")
+AUTH0_DOMAIN = onepassword_service.get_item(
+    LOCAL_ONEPASSWORD_REFERENCE + "auth0/rest_api_domain"
+)
+AUTH0_IDENTIFIER = onepassword_service.get_item(
+    LOCAL_ONEPASSWORD_REFERENCE + "auth0/rest_api_identifier"
+)
 
-AUTH0_DATABASE_CONNECTION_ID = os.environ.get("AUTH0_DATABASE_CONNECTION_ID", "")
-AUTH0_GOOGLE_CONNECTION_ID = os.environ.get("AUTH0_GOOGLE_CONNECTION_ID", "")
-AUTH0_REST_API_CLIENT_ID = os.environ.get("AUTH_REST_API_CLIENT_ID", "")
-AUTH0_REST_API_CLIENT_SECRET = os.environ.get("AUTH_REST_API_CLIENT_SECRET", "")
+AUTH0_DATABASE_CONNECTION_ID = onepassword_service.get_item(
+    LOCAL_ONEPASSWORD_REFERENCE + "auth0/db_connection_id"
+)
 
-SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY", "")
-TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID", "")
-TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN", "")
+AUTH0_GOOGLE_CONNECTION_ID = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "auth0/google_connection_id"
+)
 
-STRIPE_API_KEY = os.environ.get("STRIPE_API_KEY", "")
-STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
-MIXPANEL_TOKEN = os.environ.get("MIXPANEL_TOKEN", "")
+AUTH0_REST_API_CLIENT_ID = onepassword_service.get_item(
+    LOCAL_ONEPASSWORD_REFERENCE + "auth0/rest_api_client_id"
+)
+AUTH0_REST_API_CLIENT_SECRET = onepassword_service.get_item(
+    LOCAL_ONEPASSWORD_REFERENCE + "auth0/rest_api_client_secret"
+)
 
+AUTH0_MERCHANT_ROLE_ID = onepassword_service.get_item(
+    LOCAL_ONEPASSWORD_REFERENCE + "auth0/roles_merchant"
+)
+
+SENDGRID_API_KEY = ""
+TWILIO_ACCOUNT_SID = ""
+TWILIO_AUTH_TOKEN = ""
+
+STRIPE_API_KEY = ""
+STRIPE_WEBHOOK_SECRET = ""
+MIXPANEL_TOKEN = ""
 IS_PRODUCTION = False
 IS_QA = False
 
@@ -261,7 +314,7 @@ JWT_AUTH = {
     "JWT_DECODE_HANDLER": "django_project.auth_utils.jwt_decode_token",
     "JWT_ALGORITHM": "RS256",
     "JWT_AUDIENCE": AUTH0_IDENTIFIER,
-    "JWT_ISSUER": AUTH0_DOMAIN,
+    "JWT_ISSUER": "https://" + AUTH0_DOMAIN + "/" if AUTH0_DOMAIN else None,
     "JWT_AUTH_HEADER_PREFIX": "Bearer",
 }
 
@@ -291,3 +344,15 @@ def add_open_telemetry_spans(_, __, event_dict):
     }
 
     return event_dict
+
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "loggers": {
+        "root": {
+            "level": "DEBUG",
+            "propagate": True,
+        },
+    },
+}

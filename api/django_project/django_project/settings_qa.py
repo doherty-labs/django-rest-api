@@ -2,48 +2,134 @@ import structlog
 
 from django_project.settings import *  # noqa: F403
 from django_project.settings import add_open_telemetry_spans, initialize_opentelemetry
-from rest_api.services.hcp import HcpVaultSecrets
 
-CSRF_TRUSTED_ORIGINS = ["https://api-qa.dohertylabs.com"]
+CSRF_TRUSTED_ORIGINS = ["https://xxxxx.com"]
 
 DEBUG = False
 IS_PRODUCTION = False
 IS_QA = True
 
-SECRETS_MANAGER = HcpVaultSecrets()
 
-SECRET_KEY = SECRETS_MANAGER.get_secret(
-    "django_secret_key",
-    "",
+SECRET_KEY = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "digitalocean/django_secret_key",
 )
 
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": SECRETS_MANAGER.get_secret("pg_dbname", ""),
-        "USER": SECRETS_MANAGER.get_secret("pg_username", ""),
-        "PASSWORD": SECRETS_MANAGER.get_secret("pg_password", ""),
-        "HOST": SECRETS_MANAGER.get_secret("pg_host", ""),
-        "PORT": SECRETS_MANAGER.get_secret("pg_port", ""),
+        "NAME": onepassword_service.get_item(
+            DEV_ONEPASSWORD_REFERENCE
+            + "digitalocean/postgres_connection_pool_database",
+        ),
+        "USER": onepassword_service.get_item(
+            DEV_ONEPASSWORD_REFERENCE
+            + "digitalocean/postgres_connection_pool_username",
+        ),
+        "PASSWORD": onepassword_service.get_item(
+            DEV_ONEPASSWORD_REFERENCE
+            + "digitalocean/postgres_connection_pool_password",
+        ),
+        "HOST": onepassword_service.get_item(
+            DEV_ONEPASSWORD_REFERENCE + "digitalocean/postgres_connection_pool_host",
+        ),
+        "PORT": onepassword_service.get_item(
+            DEV_ONEPASSWORD_REFERENCE + "digitalocean/postgres_connection_pool_port",
+        ),
         "OPTIONS": {"sslmode": "require"} if not DEBUG else {},
     },
 }
 
+
+BUCKET_NAME = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "digitalocean/bucket_name"
+)
+BUCKET_KEY = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "digitalocean/bucket_access_key"
+)
+BUCKET_SECRET = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "digitalocean/bucket_secret_key"
+)
+
+do_bucket_endpoint = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "digitalocean/bucket_endpoint"
+)
+BUCKET_ENDPOINT = "https://" + do_bucket_endpoint if do_bucket_endpoint else None
+BUCKET_REGION = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "digitalocean/bucket_region"
+)
+
+
+CDN_BUCKET_NAME = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "digitalocean/cdn_bucket_name"
+)
+CDN_BUCKET_KEY = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "digitalocean/cdn_bucket_access_key"
+)
+CDN_BUCKET_SECRET = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "digitalocean/cdn_bucket_secret_key"
+)
+do_cdn_bucket_endpoint = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "digitalocean/cdn_bucket_endpoint"
+)
+CDN_BUCKET_ENDPOINT = (
+    "https://" + do_cdn_bucket_endpoint if do_cdn_bucket_endpoint else None
+)
+CDN_BUCKET_REGION = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "digitalocean/cdn_bucket_region"
+)
+
+AUTH0_DOMAIN = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "auth0/rest_api_domain"
+)
+AUTH0_IDENTIFIER = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "auth0/rest_api_identifier"
+)
+
+AUTH0_DATABASE_CONNECTION_ID = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "auth0/db_connection_id"
+)
+
+AUTH0_GOOGLE_CONNECTION_ID = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "auth0/google_connection_id"
+)
+
+AUTH0_REST_API_CLIENT_ID = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "auth0/rest_api_client_id"
+)
+AUTH0_REST_API_CLIENT_SECRET = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "auth0/rest_api_client_secret"
+)
+
+AUTH0_MERCHANT_ROLE_ID = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "auth0/roles_merchant"
+)
+
+
 ELASTIC_SEARCH = {
-    "host": SECRETS_MANAGER.get_secret("elastic_search_url", ""),
+    "host": onepassword_service.get_item(
+        DEV_ONEPASSWORD_REFERENCE + "elastic/url",
+    ),
     "port": 9200,
-    "user": SECRETS_MANAGER.get_secret("elastic_search_username", ""),
-    "password": SECRETS_MANAGER.get_secret("elastic_search_password", ""),
+    "user": onepassword_service.get_item(
+        DEV_ONEPASSWORD_REFERENCE + "elastic/username",
+    ),
+    "password": onepassword_service.get_item(
+        DEV_ONEPASSWORD_REFERENCE + "elastic/password",
+    ),
 }
 
-CELERY_BROKER_URL = SECRETS_MANAGER.get_secret("celery_broker_url", "")
-CELERY_RESULT_BACKEND = SECRETS_MANAGER.get_secret("redis_url", "")
+CELERY_BROKER_URL = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "kubernetes/rabbitmq_url",
+)
+CELERY_RESULT_BACKEND = onepassword_service.get_item(
+    DEV_ONEPASSWORD_REFERENCE + "digitalocean/redis_url",
+)
 
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [(SECRETS_MANAGER.get_secret("redis_url", ""))],
+            "hosts": [(CELERY_RESULT_BACKEND)],
         },
     },
 }
@@ -51,51 +137,11 @@ CHANNEL_LAYERS = {
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": SECRETS_MANAGER.get_secret("redis_url", ""),
+        "LOCATION": CELERY_RESULT_BACKEND,
     },
 }
 
-GMAPS_API_KEY = SECRETS_MANAGER.get_secret("gmaps_api_key", "")
-
-BUCKET_NAME = SECRETS_MANAGER.get_secret("bucket_name", "")
-BUCKET_KEY = SECRETS_MANAGER.get_secret("bucket_key", "")
-BUCKET_SECRET = SECRETS_MANAGER.get_secret("bucket_secret", "")
-BUCKET_ENDPOINT = "https://" + SECRETS_MANAGER.get_secret("bucket_endpoint", "")
-BUCKET_REGION = SECRETS_MANAGER.get_secret("bucket_region", "")
-
-
-CDN_BUCKET_NAME = SECRETS_MANAGER.get_secret("cdn_bucket_name", "")
-CDN_BUCKET_KEY = SECRETS_MANAGER.get_secret("cdn_bucket_key", "")
-CDN_BUCKET_SECRET = SECRETS_MANAGER.get_secret("cdn_bucket_secret", "")
-CDN_BUCKET_ENDPOINT = "https://" + SECRETS_MANAGER.get_secret("cdn_bucket_endpoint", "")
-CDN_BUCKET_REGION = SECRETS_MANAGER.get_secret("cdn_bucket_region", "")
-
-
 LOGIN_URL = "/admin/login/"
-AUTH0_DOMAIN = SECRETS_MANAGER.get_secret("auth_domain", "")
-AUTH0_IDENTIFIER = SECRETS_MANAGER.get_secret("auth_identifier", "")
-
-AUTH0_DATABASE_CONNECTION_ID = SECRETS_MANAGER.get_secret(
-    "auth_database_connection_id",
-    "",
-)
-AUTH0_GOOGLE_CONNECTION_ID = SECRETS_MANAGER.get_secret("auth_google_connection_id", "")
-AUTH0_REST_API_CLIENT_ID = SECRETS_MANAGER.get_secret("auth_rest_api_client_id", "")
-AUTH0_REST_API_CLIENT_SECRET = SECRETS_MANAGER.get_secret(
-    "auth_rest_api_client_secret",
-    "",
-)
-
-SENDGRID_API_KEY = SECRETS_MANAGER.get_secret("sendgrid_api_key", "")
-
-TWILIO_ACCOUNT_SID = SECRETS_MANAGER.get_secret("twilio_account_sid", "")
-TWILIO_AUTH_TOKEN = SECRETS_MANAGER.get_secret("twilio_auth_token", "")
-
-STRIPE_API_KEY = SECRETS_MANAGER.get_secret("stripe_api_key", "")
-STRIPE_WEBHOOK_SECRET = SECRETS_MANAGER.get_secret("stripe_webhook_secret", "")
-
-MIXPANEL_TOKEN = SECRETS_MANAGER.get_secret("mixpanel_token", "")
-
 
 STORAGES = {
     "default": {
@@ -120,9 +166,17 @@ STORAGES = {
     },
 }
 
+JWT_AUTH = {
+    "JWT_PAYLOAD_GET_USERNAME_HANDLER": "django_project.auth_utils.jwt_get_username_from_payload_handler",
+    "JWT_DECODE_HANDLER": "django_project.auth_utils.jwt_decode_token",
+    "JWT_ALGORITHM": "RS256",
+    "JWT_AUDIENCE": AUTH0_IDENTIFIER,
+    "JWT_ISSUER": "https://" + AUTH0_DOMAIN + "/" if AUTH0_DOMAIN else None,
+    "JWT_AUTH_HEADER_PREFIX": "Bearer",
+}
+
 
 STATIC_URL = f"{CDN_BUCKET_ENDPOINT}/"
-
 
 initialize_opentelemetry()
 

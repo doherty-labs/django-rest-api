@@ -1,7 +1,6 @@
 import boto3
 from botocore.client import BaseClient
-
-from django_project import settings
+from django.conf import settings
 
 
 class ObjectStorageService:
