@@ -8,7 +8,7 @@ from django.http import HttpRequest, JsonResponse
 from jwt import algorithms
 from rest_framework.exceptions import APIException, status
 
-from django_project.settings import AUTH0_DOMAIN, AUTH0_IDENTIFIER
+from django.conf import settings
 
 
 def jwt_get_username_from_payload_handler(payload: dict) -> str:
@@ -22,7 +22,9 @@ NOT_FOUND = "Public key not found."
 
 def jwt_decode_token(token: str) -> dict:
     header = jwt.get_unverified_header(token)
-    jwks = requests.get(AUTH0_DOMAIN + ".well-known/jwks.json", timeout=30).json()
+    jwks = requests.get(
+        "https://" + settings.AUTH0_DOMAIN + "/.well-known/jwks.json", timeout=30
+    ).json()
     public_key = None
     for jwk in jwks["keys"]:
         if jwk["kid"] == header["kid"]:
@@ -37,8 +39,8 @@ def jwt_decode_token(token: str) -> dict:
     return jwt.decode(
         token,
         public_key,
-        audience=AUTH0_IDENTIFIER,
-        issuer=AUTH0_DOMAIN,
+        audience=settings.AUTH0_IDENTIFIER,
+        issuer="https://" + settings.AUTH0_DOMAIN + "/",
         algorithms=["RS256"],
     )
 

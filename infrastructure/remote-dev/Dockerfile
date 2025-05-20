@@ -1,4 +1,4 @@
-FROM python:3.13.1
+FROM python:3.13.3
 
 EXPOSE 8000
 ENV DEBIAN_FRONTEND noninteractive
@@ -22,6 +22,8 @@ RUN apt-get install -y nodejs
 RUN npm install --global prettier
 RUN apt-get install nano -y
 RUN apt-get install vim -y
+RUN npm install -g pnpm
+RUN pnpm config set store-dir /home/node/.local/share/pnpm/store
 
 RUN pip install --upgrade pip
 RUN pip install setuptools wheel
@@ -36,11 +38,13 @@ RUN poetry config virtualenvs.create true
 RUN poetry config virtualenvs.in-project false
 RUN poetry install
 
-RUN npm install -g openapi-typescript@7.0.2
+RUN npm install -g openapi-typescript
 RUN pip install openapi-generator-cli[jdk4py]
+RUN pip install pre-commit
 
 WORKDIR /usr/src/app
 RUN mkdir -p /logs/
+RUN mkdir -p /usr/src/app/tempFileStore/
 
 ENTRYPOINT ["tail"]
 CMD ["-f","/dev/null"]

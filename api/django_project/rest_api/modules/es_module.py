@@ -1,10 +1,8 @@
 from unittest.mock import MagicMock
-from urllib.parse import urlparse
 
+from django.conf import settings
 from elasticsearch import Elasticsearch
 from injector import Module, provider, singleton
-
-from django_project import settings
 
 
 class EsModule(Module):
@@ -15,20 +13,13 @@ class EsModule(Module):
             settings.ELASTIC_SEARCH.get("user") is not None
             and settings.ELASTIC_SEARCH.get("user") != ""
         ):
-            parser_url = urlparse(str(settings.ELASTIC_SEARCH.get("host")))
-            out_url = parser_url._replace(
-                netloc=parser_url.netloc.replace(str(parser_url.port), ""),
-            ).geturl()
-
             es = Elasticsearch(
-                [out_url],
+                [settings.ELASTIC_SEARCH.get("host")],
                 http_auth=(
                     settings.ELASTIC_SEARCH.get("user", ""),
                     settings.ELASTIC_SEARCH.get("password", ""),
                 ),
-                verify_certs=False,
-                max_retries=10,
-                retry_on_timeout=True,
+                verify_certs=True,
             )
         else:
             host_url = (

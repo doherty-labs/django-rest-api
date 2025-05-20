@@ -9,8 +9,20 @@ service:
   autoscaling:
     minScale: 1
     maxScale: 10
-    targetUtilizationPercentage: 60
+    concurrencyPerPod: 100
   env:
+    - name: OP_SERVICE_ACCOUNT_TOKEN
+      valueFrom:
+        secretKeyRef:
+          name: django-rest-api
+          key: vault_service_account_token
+          optional: false
+    - name: OP_VAULT_NAME
+      valueFrom:
+        secretKeyRef:
+          name: django-rest-api
+          key: vault_name
+          optional: false
     - name: GUNICORN_WORKERS
       value: "2"
     - name: DJANGO_SETTINGS_MODULE
@@ -25,7 +37,6 @@ service:
     requests:
       cpu: "1000m"
       memory: "2Gi"
-
 celery:
   scheduler:
     name: celery-scheduler
@@ -34,6 +45,18 @@ celery:
       repository: "${DOCKER_REG_URL}/${DOCKER_REG_NAME}/${CELERY_SCHEDULER_IMAGE_NAME}"
       tag: "${SHA_VERSION}"
     env:
+      - name: OP_SERVICE_ACCOUNT_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: django-rest-api
+            key: vault_service_account_token
+            optional: false
+      - name: OP_VAULT_NAME
+        valueFrom:
+          secretKeyRef:
+            name: django-rest-api
+            key: vault_name
+            optional: false
       - name: DJANGO_SETTINGS_MODULE
         value: "${DJANGO_SETTINGS_MODULE}"
       - name: OTEL_SERVICE_NAME
@@ -57,8 +80,32 @@ celery:
     autoscaling:
       minScale: 1
       maxScale: 10
-      targetUtilizationPercentage: 60
+      concurrencyPerPod: 100
     env:
+      - name: OP_SERVICE_ACCOUNT_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: django-rest-api
+            key: vault_service_account_token
+            optional: false
+      - name: OP_VAULT_NAME
+        valueFrom:
+          secretKeyRef:
+            name: django-rest-api
+            key: vault_name
+            optional: false
+      - name: FLOWER_USER
+        valueFrom:
+          secretKeyRef:
+            name: django-rest-api
+            key: flower_user
+            optional: false
+      - name: FLOWER_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: django-rest-api
+            key: flower_password
+            optional: false
       - name: DJANGO_SETTINGS_MODULE
         value: "${DJANGO_SETTINGS_MODULE}"
       - name: OTEL_SERVICE_NAME
@@ -86,6 +133,18 @@ celery:
           pollingInterval: 30
           cooldownPeriod: 200
         env:
+          - name: OP_SERVICE_ACCOUNT_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: django-rest-api
+                key: vault_service_account_token
+                optional: false
+          - name: OP_VAULT_NAME
+            valueFrom:
+              secretKeyRef:
+                name: django-rest-api
+                key: vault_name
+                optional: false
           - name: DJANGO_SETTINGS_MODULE
             value: "${DJANGO_SETTINGS_MODULE}"
           - name: WORKER_POOL
@@ -112,6 +171,18 @@ celery:
           pollingInterval: 30
           cooldownPeriod: 200
         env:
+          - name: OP_SERVICE_ACCOUNT_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: django-rest-api
+                key: vault_service_account_token
+                optional: false
+          - name: OP_VAULT_NAME
+            valueFrom:
+              secretKeyRef:
+                name: django-rest-api
+                key: vault_name
+                optional: false
           - name: DJANGO_SETTINGS_MODULE
             value: "${DJANGO_SETTINGS_MODULE}"
           - name: WORKER_POOL
@@ -138,6 +209,18 @@ celery:
           pollingInterval: 30
           cooldownPeriod: 200
         env:
+          - name: OP_SERVICE_ACCOUNT_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: django-rest-api
+                key: vault_service_account_token
+                optional: false
+          - name: OP_VAULT_NAME
+            valueFrom:
+              secretKeyRef:
+                name: django-rest-api
+                key: vault_name
+                optional: false
           - name: DJANGO_SETTINGS_MODULE
             value: "${DJANGO_SETTINGS_MODULE}"
           - name: WORKER_POOL
@@ -154,5 +237,34 @@ celery:
             value: "cloud.provider=digitalocean,deployment.environment=${ENV},service.version=${SHA_VERSION},container.image.name=${DOCKER_REG_URL}/${DOCKER_REG_NAME}/${CELERY_WORKER_IMAGE_NAME},container.image.tag=${SHA_VERSION}"
         resources:
           requests:
-            cpu: "2000m"
-            memory: "4Gi"
+            cpu: "1000m"
+            memory: "2Gi"
+webapps:
+  - name: "landing"
+    namespace: default
+    hostName: "${LANDING_HOSTNAME}"
+    port: 3000
+    image:
+      repository: "${DOCKER_REG_URL}/${DOCKER_REG_NAME}/${LANDING_IMAGE_NAME}"
+      tag: "${SHA_VERSION}"
+    autoscaling:
+      minScale: 1
+      maxScale: 10
+      concurrencyPerPod: 100
+    env:
+      - name: OP_SERVICE_ACCOUNT_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: django-rest-api
+            key: vault_service_account_token
+            optional: false
+      - name: OP_VAULT_NAME
+        valueFrom:
+          secretKeyRef:
+            name: django-rest-api
+            key: vault_name
+            optional: false
+    resources:
+      requests:
+        cpu: "1000m"
+        memory: "1Gi"

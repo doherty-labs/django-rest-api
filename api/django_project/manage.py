@@ -14,19 +14,6 @@ if os.environ.get("ENABLE_GEVENT_PATCH", "False").lower().strip() == "true":
 
 import os
 import sys
-from ast import literal_eval
-
-DEBUG = literal_eval(os.environ.get("DEBUG_MODE", "True"))
-
-
-def initialize_debugger() -> None:
-    if DEBUG:
-        try:
-            import debugpy
-
-            debugpy.listen(("0.0.0.0", 8069))
-        except Exception:
-            pass
 
 
 def main() -> None:
@@ -47,5 +34,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    initialize_debugger()
     main()

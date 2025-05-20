@@ -11,6 +11,7 @@ repos:
       - id: shellcheck
   - repo: https://github.com/google/yamlfmt
     rev: v0.10.0
+    exclude: pnpm-lock.yaml
     hooks:
       - id: yamlfmt
   - repo: https://github.com/antonbabenko/pre-commit-terraform
@@ -23,3 +24,15 @@ repos:
     hooks:
       - id: jsonnet-format
       - id: jsonnet-lint
+  - repo: local
+    hooks:
+      - id: webapp-lint
+        name: webapp-lint
+        entry: ./infrastructure/webapp_lint.sh
+        language: script
+        pass_filenames: false
+exclude: |-
+  (?x)^(
+      .github/.*
+      pnpm-lock.yaml
+  )$

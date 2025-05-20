@@ -1,9 +1,8 @@
 from unittest.mock import MagicMock
 
+from django.conf import settings
 from injector import Module, provider, singleton
 from redis import Redis
-
-from django_project import settings
 
 
 class RedisModule(Module):

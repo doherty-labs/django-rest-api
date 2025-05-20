@@ -1,4 +1,4 @@
-FROM python:3.13.1
+FROM python:3.13.3
 EXPOSE 5555
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -28,6 +28,7 @@ WORKDIR /usr/src/app
 COPY ./api/django_project ./django
 COPY ./infrastructure/celery-flower/entry.sh ./
 RUN mkdir -p /logs/
+RUN mkdir -p /usr/src/app/tempFileStore/
 
 WORKDIR /usr/src/app
 RUN ["chmod", "+x", "./entry.sh"]

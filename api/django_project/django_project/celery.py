@@ -1,4 +1,6 @@
 import os
+from celery.schedules import crontab
+
 
 if os.environ.get("ENABLE_GEVENT_PATCH", "False").lower().strip() == "true":
     from gevent import monkey
@@ -15,8 +17,7 @@ from pathlib import Path
 
 import django
 from celery import Celery, bootsteps
-from celery.signals import beat_init, worker_process_init, worker_ready, worker_shutdown
-from opentelemetry.instrumentation.celery import CeleryInstrumentor
+from celery.signals import beat_init, worker_ready, worker_shutdown
 
 # File for validating worker readiness
 READINESS_FILE = Path("/tmp/celery_ready")  # noqa: S108
@@ -64,7 +65,7 @@ def beat_ready(**_):
     READINESS_FILE.touch()
 
 
-app = Celery("rest_api", include=["rest_api"])
+app = Celery("rest_api")
 app.steps["worker"].add(LivenessProbe)
 app.config_from_object("django.conf:settings", namespace="CELERY")
 app.autodiscover_tasks()
@@ -73,8 +74,4 @@ app.conf.result_chord_join_timeout = 900
 app.conf.result_chord_retry_interval = 5
 app.conf.result_expires = timedelta(days=3)
 app.conf.broker_connection_retry_on_startup = True
-
-
-@worker_process_init.connect(weak=False)
-def init_celery_tracing(**_):
-    CeleryInstrumentor().instrument()
+app.conf.beat_schedule = {}

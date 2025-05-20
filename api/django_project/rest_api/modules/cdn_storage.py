@@ -1,8 +1,8 @@
 from unittest.mock import MagicMock
 
+from django.conf import settings
 from injector import Module, provider, singleton
 
-from django_project import settings
 from rest_api.services.cdn import CdnStorage
 
 

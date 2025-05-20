@@ -1,4 +1,4 @@
-FROM python:3.13.1
+FROM python:3.13.3
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -27,6 +27,7 @@ WORKDIR /usr/src/app
 COPY ./api/django_project ./django
 COPY ./infrastructure/celery-worker/entry.sh ./
 RUN mkdir -p /logs/
+RUN mkdir -p /usr/src/app/tempFileStore/
 
 RUN ["chmod", "+x", "./entry.sh"]
 ENTRYPOINT ["./entry.sh"]

@@ -1,6 +1,5 @@
+from django.conf import settings
 from stripe import Account, Customer, StripeClient
-
-from django_project import settings
 
 
 class StripeService:

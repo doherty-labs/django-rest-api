@@ -1,5 +1,8 @@
+import sys
+
 from injector import Injector
 
+from rest_api.modules.auth0 import Auth0ServiceModule, TestAuth0ServiceModule
 from rest_api.modules.cdn_storage import (
     CdnObjectStorageModule,
     TestCdnObjectStorageModule,
@@ -13,7 +16,7 @@ from rest_api.modules.sendgrid import EmailModule, TestEmailModule
 from rest_api.modules.stripe import StripeModule, TestStripeModule
 from rest_api.modules.twilio import SMSModule, TestSMSModule
 
-InstanceInjector = Injector(
+real_injector = Injector(
     [
         RedisModule,
         EsModule,
@@ -24,11 +27,12 @@ InstanceInjector = Injector(
         StripeModule,
         SMSModule,
         MixpanelModule,
+        Auth0ServiceModule,
     ],
 )
 
 
-TestInjector = Injector(
+test_injector = Injector(
     [
         TestRedisModule,
         TestEsModule,
@@ -39,5 +43,8 @@ TestInjector = Injector(
         TestStripeModule,
         TestSMSModule,
         TestMixpanelModule,
+        TestAuth0ServiceModule,
     ],
 )
+
+InstanceInjector = test_injector if "pytest" in sys.modules else real_injector

@@ -14,7 +14,8 @@
     "**/.next/": true,
     "**/.storybook/": true,
     "**/next-env.d.ts": true,
-    "**/.ruff_cache/": true
+    "**/.ruff_cache/": true,
+    "**/.pnpm_store/": true,
   },
   "files.watcherExclude": {
     "**/.mypy_cache": true,
@@ -22,7 +23,8 @@
     "**/docs/_build": true,
     "**/node_modules/": true,
     "**/.next/": true,
-    "**/api/clients/": true
+    "**/api/clients/": true,
+    "**/.pnpm_store/": true,
   },
   "python.testing.autoTestDiscoverOnSaveEnabled": true,
   "python.testing.cwd": "${workspaceFolder}/api/django_project/",
