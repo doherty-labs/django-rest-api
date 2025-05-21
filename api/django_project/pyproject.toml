@@ -6,7 +6,7 @@ authors = ["John Doherty"]
 
 [tool.poetry.dependencies]
 python = "^3.13"
-Django = "^5.1.8"
+Django = "^5.2.1"
 djangorestframework = "^3.16.0"
 Markdown = "^3.4.1"
 django-filter = "^25.1"
