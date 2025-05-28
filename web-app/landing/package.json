@@ -22,7 +22,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
     "postcss": "^8",
-    "tailwindcss": "^4.1.7",
+    "tailwindcss": "^4.1.8",
     "typescript": "^5",
     "@datadog/datadog-ci": "^3.6.1"
   },
