@@ -3338,20 +3338,20 @@ crt = ["botocore[crt] (>=1.37.4,<2.0a.0)"]
 
 [[package]]
 name = "sendgrid"
-version = "6.12.2"
+version = "6.12.3"
 description = "Twilio SendGrid library for Python"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
 groups = ["main"]
 files = [
-    {file = "sendgrid-6.12.2-py3-none-any.whl", hash = "sha256:423f207e8593fb2950b6f7571c44994f20518bb25f19d89ecb3f9aa41ee88e18"},
-    {file = "sendgrid-6.12.2.tar.gz", hash = "sha256:969297eaf4a57970fbcdf9de5b663d6c1c50710cceda103b26557b661ab1382a"},
+    {file = "sendgrid-6.12.3-py3-none-any.whl", hash = "sha256:b5fc32c8a3b4bd20a46cdde1d7592a32e97165c4179354fe720850c2e8055d16"},
+    {file = "sendgrid-6.12.3.tar.gz", hash = "sha256:d0cb7bf92cb5cc9fc4466074d6a40fd474332bbb52914a93620f566f26060ac7"},
 ]
 
 [package.dependencies]
 ecdsa = ">=0.19.1,<1"
 python-http-client = ">=3.2.1"
-werkzeug = {version = ">=3.0.0", markers = "python_version >= \"3.11\""}
+werkzeug = {version = ">=2.3.5", markers = "python_version >= \"3.12\""}
 
 [[package]]
 name = "setuptools"
@@ -4648,4 +4648,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "d0b1ad6a68fb6b427ca77ec653b56850aa35c9e9fa305c0d34e2a031166de7a7"
+content-hash = "57f8016d0177851b852e0594acc05492384a498e23edc5aeff63f5339b8fe766"
