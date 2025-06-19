@@ -19,8 +19,8 @@ importers:
         version: 19.1.0(react@19.1.0)
     devDependencies:
       '@datadog/datadog-ci':
-        specifier: ^3.9.1
-        version: 3.9.1
+        specifier: ^3.10.0
+        version: 3.10.0
       '@eslint/eslintrc':
         specifier: ^3
         version: 3.3.1
@@ -91,8 +91,8 @@ packages:
     resolution: {integrity: sha512-ZSWZyqtDXd51B2970tB5XI6+DFtw9c09a0C5v7UP8DY7wusNwqeM28jsFU7HqRAZTM4Hbf7ozC6OOj8uvH/rsQ==}
     engines: {node: '>=18.0.0'}
 
-  '@aws-sdk/client-lambda@3.830.0':
-    resolution: {integrity: sha512-rdZPFteEN4Tw8vNVKh5rwPhf2zJz3cazx2gf1NSB8+GtleefY6bsAqyOQueSMSkE6fGZw7kmaPJBvWDxzMX4nQ==}
+  '@aws-sdk/client-lambda@3.833.0':
+    resolution: {integrity: sha512-m56p1MB+/t+QFfZZzQoqlVcITn8PRYa7yzvuO2LbR9YsQ97uZyVCu970RAPSkW6/SjyWTUvXtQw3x/1KITcrvw==}
     engines: {node: '>=18.0.0'}
 
   '@aws-sdk/client-sfn@3.830.0':
@@ -255,8 +255,8 @@ packages:
     resolution: {integrity: sha512-ctcVz4xS+st5KxOlQqgpvA+uDFAa59CvkmumnuhlD2XmNczloKBdCiMQG7/TigSlaeHe01qoOlDjz3TyUAmKUg==}
     engines: {node: '>=16'}
 
-  '@datadog/datadog-ci@3.9.1':
-    resolution: {integrity: sha512-FkJKcZUFXDL37HMBgjMro76sU12n57eqVfKvva0BzBECYNOal+h6s2rxmgM1tfRmPrOSDIfUFKqoqty4NyjOVw==}
+  '@datadog/datadog-ci@3.10.0':
+    resolution: {integrity: sha512-EEq+gCqF2LKcCC+/HdDfw4KIpiHMrrGnXyygXjkXFjU4Q/+9o2Th3CHRqqoqwKFRyDOV+QcONPG3bKm9WiCoow==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -3428,7 +3428,7 @@ snapshots:
     transitivePeerDependencies:
       - aws-crt
 
-  '@aws-sdk/client-lambda@3.830.0':
+  '@aws-sdk/client-lambda@3.833.0':
     dependencies:
       '@aws-crypto/sha256-browser': 5.2.0
       '@aws-crypto/sha256-js': 5.2.0
@@ -3945,11 +3945,11 @@ snapshots:
       jsonwebtoken: 9.0.2
       uuid: 8.3.2
 
-  '@datadog/datadog-ci@3.9.1':
+  '@datadog/datadog-ci@3.10.0':
     dependencies:
       '@aws-sdk/client-cloudwatch-logs': 3.832.0
       '@aws-sdk/client-iam': 3.830.0
-      '@aws-sdk/client-lambda': 3.830.0
+      '@aws-sdk/client-lambda': 3.833.0
       '@aws-sdk/client-sfn': 3.830.0
       '@aws-sdk/core': 3.826.0
       '@aws-sdk/credential-provider-ini': 3.830.0
