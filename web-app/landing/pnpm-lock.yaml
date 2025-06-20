@@ -19,8 +19,8 @@ importers:
         version: 19.1.0(react@19.1.0)
     devDependencies:
       '@datadog/datadog-ci':
-        specifier: ^3.10.0
-        version: 3.10.0
+        specifier: ^3.11.0
+        version: 3.11.0
       '@eslint/eslintrc':
         specifier: ^3
         version: 3.3.1
@@ -255,8 +255,8 @@ packages:
     resolution: {integrity: sha512-ctcVz4xS+st5KxOlQqgpvA+uDFAa59CvkmumnuhlD2XmNczloKBdCiMQG7/TigSlaeHe01qoOlDjz3TyUAmKUg==}
     engines: {node: '>=16'}
 
-  '@datadog/datadog-ci@3.10.0':
-    resolution: {integrity: sha512-EEq+gCqF2LKcCC+/HdDfw4KIpiHMrrGnXyygXjkXFjU4Q/+9o2Th3CHRqqoqwKFRyDOV+QcONPG3bKm9WiCoow==}
+  '@datadog/datadog-ci@3.11.0':
+    resolution: {integrity: sha512-zRpCKr/sVTju8/c52IAWLilE9mwX+tj6TYi5izUBrOex0w56ztFqMYG5aiJPnYjdcO7l1P+A13NJxmVp3wrBEQ==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -3945,7 +3945,7 @@ snapshots:
       jsonwebtoken: 9.0.2
       uuid: 8.3.2
 
-  '@datadog/datadog-ci@3.10.0':
+  '@datadog/datadog-ci@3.11.0':
     dependencies:
       '@aws-sdk/client-cloudwatch-logs': 3.832.0
       '@aws-sdk/client-iam': 3.830.0
