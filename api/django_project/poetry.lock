@@ -2205,14 +2205,14 @@ pydantic = ">=2.5"
 
 [[package]]
 name = "openapi-generator-cli"
-version = "7.13.0.post0"
+version = "7.14.0"
 description = "CLI for openapi generator"
 optional = false
 python-versions = "<4,>=3.9"
 groups = ["main"]
 files = [
-    {file = "openapi_generator_cli-7.13.0.post0-py3-none-any.whl", hash = "sha256:e17d099203964e82db5fc7309b27f2154dd6dca3b237084acc896fd03a6f4569"},
-    {file = "openapi_generator_cli-7.13.0.post0.tar.gz", hash = "sha256:ba40cac2eb5aab5544a889f8cd97b57fae995fea242b7ecb05524ea86da85fe4"},
+    {file = "openapi_generator_cli-7.14.0-py3-none-any.whl", hash = "sha256:fbf7b606671fd939ab1ee185942396aa4ba88f8ec211a30a47ce02f81855778e"},
+    {file = "openapi_generator_cli-7.14.0.tar.gz", hash = "sha256:48b5478a83ee09dfd38018da3e1661acafd2ce06627aecce0ec10a66cbd1aa00"},
 ]
 
 [package.dependencies]
@@ -4663,4 +4663,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "1e182230f22f8894e287587b53036f0330c9074600274b7631aee27145a8f471"
+content-hash = "ee306a0d36a5299d96bc6369eaf50f9670a9050ae725f5a1b7986d26d1eb9e1d"
