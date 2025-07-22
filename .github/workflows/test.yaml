@@ -47,23 +47,16 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-      - name: Install setuptools and upgrade pip and install wheel
-        run: |
-          python -m pip install --upgrade pip
-          pip install setuptools
-          pip install wheel
-      - name: Install and configure Poetry
-        uses: snok/install-poetry@v1
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
         with:
-          version: 1.4.1
-          virtualenvs-create: false
-          virtualenvs-in-project: false
+          version: 0.8.1
       - name: Install Dependencies
         working-directory: ./api/django_project/
         run: |
           sudo mkdir /logs/
           sudo chmod 777 /logs/
-          poetry install
+          uv sync
       - name: Linting
         working-directory: ./api/django_project/
         env:
@@ -72,7 +65,7 @@ jobs:
           DATABASE_PASSWORD: postgres
         run: |
           ls -la
-          ruff check .
+          uv run ruff check .
       - name: Run Tests
         working-directory: ./api/django_project/
         env:
@@ -80,8 +73,8 @@ jobs:
           DATABASE_USER: postgres
           DATABASE_PASSWORD: postgres
         run: |
-          python manage.py makemigrations --check --dry-run
-          coverage3 erase
-          coverage3 run --source=rest_api --omit=*/migrations/*,*/modules/*,*/factory/*,*/tests/*,*/e2e/*,*/schemas/*,*/services/*,*/serializers/*,*/management/*,admin.py,apps.py,channels.py -m pytest --ds=django_project.settings_test --ignore-glob=**rest_api/e2e/**
-          coverage3 report -m
-          coverage3 xml
+          uv run manage.py makemigrations --check --dry-run
+          uv run coverage3 erase
+          uv run coverage3 run --source=rest_api --omit=*/migrations/*,*/modules/*,*/factory/*,*/tests/*,*/e2e/*,*/schemas/*,*/services/*,*/serializers/*,*/management/*,admin.py,apps.py,channels.py -m pytest --ds=django_project.settings_test --ignore-glob=**rest_api/e2e/**
+          uv run coverage3 report -m
+          uv run coverage3 xml
