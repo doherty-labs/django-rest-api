@@ -3,8 +3,9 @@ from __future__ import annotations
 import json
 import logging
 import uuid
+from collections.abc import Callable
 from functools import wraps
-from typing import Any, Callable, Generic, Self, TypeVar
+from typing import Any, Self, TypeVar
 
 from elastic_transport import ObjectApiResponse
 from elasticsearch import Elasticsearch, helpers
@@ -17,7 +18,7 @@ ElasticPydanticModel = TypeVar("ElasticPydanticModel", bound=BaseModel)
 logger = logging.getLogger(__name__)
 
 
-class ElasticSearchService(Generic[ElasticPydanticModel]):
+class ElasticSearchService[ElasticPydanticModel]:
     es_index_name: str
     pydantic_model: ElasticPydanticModel
     es_index_mapping: dict
