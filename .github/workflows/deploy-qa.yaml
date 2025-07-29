@@ -117,7 +117,7 @@ jobs:
         with:
           version: 9
       - name: Install 1Password CLI
-        uses: 1password/install-cli-action@v1
+        uses: 1password/install-cli-action@v2
       - name: Install dependencies
         working-directory: ${{ matrix.folder }}
         run: pnpm install
@@ -171,7 +171,7 @@ jobs:
         with:
           version: 9
       - name: Install 1Password CLI
-        uses: 1password/install-cli-action@v1
+        uses: 1password/install-cli-action@v2
       - name: Install dependencies
         working-directory: ${{ matrix.folder }}
         run: pnpm install
