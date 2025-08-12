@@ -21,7 +21,7 @@ jobs:
           - {dockerfile: "./infrastructure/celery-scheduler/Dockerfile", tag: "qa-celery-scheduler"}
           - {dockerfile: "./infrastructure/web-app/Dockerfile", tag: "qa-landing"}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: 1password/load-secrets-action/configure@v2
         with:
           service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
@@ -57,7 +57,7 @@ jobs:
           - {dockerfile: "./infrastructure/celery-scheduler/Dockerfile", tag: "qa-celery-scheduler"}
           - {dockerfile: "./infrastructure/web-app/Dockerfile", tag: "qa-landing", webapp_path: "./web-app/landing"}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: 1password/load-secrets-action/configure@v2
         with:
           service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
@@ -108,7 +108,7 @@ jobs:
           - {folder: "./web-app/landing/", service: "landing"}
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Use Node.js 23
         uses: actions/setup-node@v4
         with:
@@ -162,7 +162,7 @@ jobs:
           - {folder: "./web-app/landing/", service: "landing"}
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Use Node.js 23
         uses: actions/setup-node@v4
         with:
@@ -209,7 +209,7 @@ jobs:
     environment: qa
     steps:
       - uses: azure/setup-helm@v4.3.0
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: 1password/load-secrets-action/configure@v2
         with:
           service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
