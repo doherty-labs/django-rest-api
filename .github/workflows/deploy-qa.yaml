@@ -22,10 +22,10 @@ jobs:
           - {dockerfile: "./infrastructure/web-app/Dockerfile", tag: "qa-landing"}
     steps:
       - uses: actions/checkout@v5
-      - uses: 1password/load-secrets-action/configure@v2
+      - uses: 1password/load-secrets-action/configure@v3
         with:
           service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-      - uses: 1password/load-secrets-action@v2
+      - uses: 1password/load-secrets-action@v3
         id: op-load-secret
         with:
           export-env: false
@@ -58,10 +58,10 @@ jobs:
           - {dockerfile: "./infrastructure/web-app/Dockerfile", tag: "qa-landing", webapp_path: "./web-app/landing"}
     steps:
       - uses: actions/checkout@v5
-      - uses: 1password/load-secrets-action/configure@v2
+      - uses: 1password/load-secrets-action/configure@v3
         with:
           service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-      - uses: 1password/load-secrets-action@v2
+      - uses: 1password/load-secrets-action@v3
         id: op-load-secret
         with:
           export-env: false
@@ -132,10 +132,10 @@ jobs:
           export OP_SERVICE_ACCOUNT_TOKEN=${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
           op inject -i env.test.tmpl -o .env.production --force
           pnpm build
-      - uses: 1password/load-secrets-action/configure@v2
+      - uses: 1password/load-secrets-action/configure@v3
         with:
           service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-      - uses: 1password/load-secrets-action@v2
+      - uses: 1password/load-secrets-action@v3
         id: op-load-secret
         with:
           export-env: false
@@ -178,10 +178,10 @@ jobs:
       - name: Set outputs
         id: vars
         run: echo "sha_short=sha-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-      - uses: 1password/load-secrets-action/configure@v2
+      - uses: 1password/load-secrets-action/configure@v3
         with:
           service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-      - uses: 1password/load-secrets-action@v2
+      - uses: 1password/load-secrets-action@v3
         id: op-load-secret
         with:
           export-env: false
@@ -210,10 +210,10 @@ jobs:
     steps:
       - uses: azure/setup-helm@v4.3.0
       - uses: actions/checkout@v5
-      - uses: 1password/load-secrets-action/configure@v2
+      - uses: 1password/load-secrets-action/configure@v3
         with:
           service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-      - uses: 1password/load-secrets-action@v2
+      - uses: 1password/load-secrets-action@v3
         id: op-load-secret
         with:
           export-env: false
