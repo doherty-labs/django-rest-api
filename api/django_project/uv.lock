@@ -1597,15 +1597,15 @@ wheels = [
 
 [[package]]
 name = "polyfactory"
-version = "2.22.1"
+version = "2.22.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "faker" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ea/21/0b1a08bd4ab7d4685b4b83969a7b93a11c6557955765ada1b28d362d177c/polyfactory-2.22.1.tar.gz", hash = "sha256:6c91693088c81ab8fbe22dc66cae21fd3c17f91930fe1fae5b35b030eb020d3a", size = 253987, upload-time = "2025-07-14T19:37:29.032Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/4e/a6/950d13856d995705df33b92451559fd317207a9c43629ab1771135a0c966/polyfactory-2.22.2.tar.gz", hash = "sha256:a3297aa0b004f2b26341e903795565ae88507c4d86e68b132c2622969028587a", size = 254462, upload-time = "2025-08-15T06:23:21.28Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/12/8d/245e02e6ff1f046f70636dc62380ea73b03ab1d7f1fdcf61cbe26bc9c030/polyfactory-2.22.1-py3-none-any.whl", hash = "sha256:7500ee3678d9bc25347c0a73a35d3711cfcf9c7f45ad56d0bb085e9f75ecae7a", size = 63547, upload-time = "2025-07-14T19:37:27.353Z" },
+    { url = "https://files.pythonhosted.org/packages/e7/fe/d52c90e07c458f38b26f9972a25cb011b2744813f76fcd6121dde64744fa/polyfactory-2.22.2-py3-none-any.whl", hash = "sha256:9bea58ac9a80375b4153cd60820f75e558b863e567e058794d28c6a52b84118a", size = 63715, upload-time = "2025-08-15T06:23:19.664Z" },
 ]
 
 [[package]]
