@@ -1,19 +1,15 @@
 name: Run tests
-
 concurrency:
   group: ${{ github.ref }}
-
 on:
   push:
     branches: ["main"]
   pull_request:
     branches: ["**"]
   workflow_dispatch:
-
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-
 jobs:
   run_django_tests:
     name: Backend tests
@@ -22,10 +18,7 @@ jobs:
       redis:
         image: redis
         options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+          --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
         ports:
           - 6379:6379
       postgres:
@@ -35,10 +28,7 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+          --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
         ports:
           - 5432:5432
     steps:
@@ -52,16 +42,18 @@ jobs:
           python -m pip install --upgrade pip
           pip install setuptools
           pip install wheel
-      - name: Install uv
-        uses: astral-sh/setup-uv@v6
+      - name: Install and configure Poetry
+        uses: snok/install-poetry@v1
         with:
-          version: 0.8.2
+          version: 1.4.1
+          virtualenvs-create: false
+          virtualenvs-in-project: false
       - name: Install Dependencies
         working-directory: ./api/django_project/
         run: |
           sudo mkdir /logs/
           sudo chmod 777 /logs/
-          uv sync
+          poetry install
       - name: Linting
         working-directory: ./api/django_project/
         env:
@@ -70,7 +62,7 @@ jobs:
           DATABASE_PASSWORD: postgres
         run: |
           ls -la
-          uv run ruff check .
+          ruff check .
       - name: Run Tests
         working-directory: ./api/django_project/
         env:
@@ -78,8 +70,8 @@ jobs:
           DATABASE_USER: postgres
           DATABASE_PASSWORD: postgres
         run: |
-          uv run manage.py makemigrations --check --dry-run
-          uv run coverage3 erase
-          uv run coverage3 run --source=rest_api --omit=*/migrations/*,*/modules/*,*/factory/*,*/tests/*,*/e2e/*,*/schemas/*,*/services/*,*/serializers/*,*/management/*,admin.py,apps.py,channels.py -m pytest --ds=django_project.settings_test --ignore-glob=**rest_api/e2e/**
-          uv run coverage3 report -m
-          uv run coverage3 xml
+          python manage.py makemigrations --check --dry-run
+          coverage3 erase
+          coverage3 run --source=rest_api --omit=*/migrations/*,*/modules/*,*/factory/*,*/tests/*,*/e2e/*,*/schemas/*,*/services/*,*/serializers/*,*/management/*,admin.py,apps.py,channels.py -m pytest --ds=django_project.settings_test --ignore-glob=**rest_api/e2e/**
+          coverage3 report -m
+          coverage3 xml
