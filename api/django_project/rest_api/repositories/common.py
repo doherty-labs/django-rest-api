@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import TypeVar
+from typing import Generic, TypeVar
 
 from pydantic import BaseModel
 
@@ -8,7 +8,7 @@ from rest_api.services.elastic import ElasticSearchService
 PydanticType = TypeVar("PydanticType", bound=BaseModel)
 
 
-class CommonModelRepo[PydanticType]:
+class CommonModelRepo(Generic[PydanticType]):
     pydantic_model: PydanticType
     es_instance: ElasticSearchService
 
