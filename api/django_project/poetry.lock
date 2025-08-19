@@ -1125,14 +1125,14 @@ Django = ">=3.2,<6.0"
 
 [[package]]
 name = "djangorestframework"
-version = "3.16.0"
+version = "3.16.1"
 description = "Web APIs for Django, made easy."
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "djangorestframework-3.16.0-py3-none-any.whl", hash = "sha256:bea7e9f6b96a8584c5224bfb2e4348dfb3f8b5e34edbecb98da258e892089361"},
-    {file = "djangorestframework-3.16.0.tar.gz", hash = "sha256:f022ff46613584de994c0c6a4aebbace5fd700555fbe9d33b865ebf173eba6c9"},
+    {file = "djangorestframework-3.16.1-py3-none-any.whl", hash = "sha256:33a59f47fb9c85ede792cbf88bde71893bcda0667bc573f784649521f1102cec"},
+    {file = "djangorestframework-3.16.1.tar.gz", hash = "sha256:166809528b1aced0a17dc66c24492af18049f2c9420dbd0be29422029cfc3ff7"},
 ]
 
 [package.dependencies]
@@ -4691,4 +4691,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "48a19f615d1e288bf167e24a75bf0c57f74407feed6e3673136622781189826f"
+content-hash = "642bfd923eb23ec9632b29f2d96fdbfb28a01f9751747f6f0976279fc5409265"
