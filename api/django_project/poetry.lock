@@ -1977,7 +1977,6 @@ python-versions = ">=2.7, !=3.4.*"
 groups = ["main"]
 files = [
     {file = "mixpanel-4.10.1-py2.py3-none-any.whl", hash = "sha256:a7a338b7197327e36356dbc1903086e7626db6d88367ccdd732b3f3c60d3b3ed"},
-    {file = "mixpanel-4.10.1-py3-none-any.whl", hash = "sha256:8eb840f3c495c486189211e68443f7521d5c964c362ae23e9e2feba417cefcb8"},
     {file = "mixpanel-4.10.1.tar.gz", hash = "sha256:29a6b5773dd34f05cf8e249f4e1d16e7b6280d6b58894551ce9a5aad7700a115"},
 ]
 
@@ -3641,14 +3640,14 @@ test = ["pytest"]
 
 [[package]]
 name = "twilio"
-version = "9.6.5"
+version = "9.7.1"
 description = "Twilio API client and TwiML generator"
 optional = false
 python-versions = ">=3.7.0"
 groups = ["main"]
 files = [
-    {file = "twilio-9.6.5-py2.py3-none-any.whl", hash = "sha256:e9f547267b59fb474bfc715c042662d9d2b1a1bbcde34017954407aa95482277"},
-    {file = "twilio-9.6.5.tar.gz", hash = "sha256:4f246b3d3474090b55dc13034b7cec2f9250877f5298f8419a3fe8a447f36f71"},
+    {file = "twilio-9.7.1-py2.py3-none-any.whl", hash = "sha256:1f7753431784a1501c3b06c6c8ca8685f8736b28bd11a17eeb96249017b62afb"},
+    {file = "twilio-9.7.1.tar.gz", hash = "sha256:ade5bc361147b667c3a5ce69be74b5f6c8b8a1176743b90f0a9641e233ffa20c"},
 ]
 
 [package.dependencies]
@@ -4694,4 +4693,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "9d2e3104c6cfed389a05a88352722cca64fd432271ed5754374b65e2d9b5d5b1"
+content-hash = "20010c5861c477c99e522d1cb66c196e83aae819ed206ed1345da067e8e7b3ef"
