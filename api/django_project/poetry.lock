@@ -1970,20 +1970,22 @@ files = [
 
 [[package]]
 name = "mixpanel"
-version = "4.10.1"
+version = "4.11.0"
 description = "Official Mixpanel library for Python"
 optional = false
-python-versions = ">=2.7, !=3.4.*"
+python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "mixpanel-4.10.1-py2.py3-none-any.whl", hash = "sha256:a7a338b7197327e36356dbc1903086e7626db6d88367ccdd732b3f3c60d3b3ed"},
-    {file = "mixpanel-4.10.1.tar.gz", hash = "sha256:29a6b5773dd34f05cf8e249f4e1d16e7b6280d6b58894551ce9a5aad7700a115"},
+    {file = "mixpanel-4.11.0-py3-none-any.whl", hash = "sha256:fd82693dc01e02f30fced8f67e24d82445c02dce9693a2970fe5c803684074a5"},
+    {file = "mixpanel-4.11.0.tar.gz", hash = "sha256:ebfbad5732963d9844619e8d1e57b01f2b77f6e6b13cbe48d892479880665892"},
 ]
 
 [package.dependencies]
-requests = ">=2.4.2"
-six = ">=1.9.0"
-urllib3 = "*"
+requests = ">=2.32.5"
+
+[package.extras]
+dev = ["build", "ghp-import", "sphinx", "tox (>=4.28.4)", "twine"]
+test = ["pytest (>=8.4.1)", "responses (>=0.25.8)"]
 
 [[package]]
 name = "msgpack"
@@ -4693,4 +4695,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "e5d3f1992fd0ac1b212d70681305f8a75214e1325311cf7ebdf89170ce2f715b"
+content-hash = "dad344f20f2db0ac1daf2ee04ec20d7bc38dea3479a623462a916cd72cf45002"
