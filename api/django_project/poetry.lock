@@ -1977,6 +1977,7 @@ python-versions = ">=2.7, !=3.4.*"
 groups = ["main"]
 files = [
     {file = "mixpanel-4.10.1-py2.py3-none-any.whl", hash = "sha256:a7a338b7197327e36356dbc1903086e7626db6d88367ccdd732b3f3c60d3b3ed"},
+    {file = "mixpanel-4.10.1-py3-none-any.whl", hash = "sha256:8eb840f3c495c486189211e68443f7521d5c964c362ae23e9e2feba417cefcb8"},
     {file = "mixpanel-4.10.1.tar.gz", hash = "sha256:29a6b5773dd34f05cf8e249f4e1d16e7b6280d6b58894551ce9a5aad7700a115"},
 ]
 
@@ -3670,14 +3671,14 @@ files = [
 
 [[package]]
 name = "types-boto3"
-version = "1.40.14"
-description = "Type annotations for boto3 1.40.14 generated with mypy-boto3-builder 8.11.0"
+version = "1.40.17"
+description = "Type annotations for boto3 1.40.17 generated with mypy-boto3-builder 8.11.0"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "types_boto3-1.40.14-py3-none-any.whl", hash = "sha256:72325e7ab3ef22643963b193171f01ef079d49026ef0f10160a4a6d272f22eeb"},
-    {file = "types_boto3-1.40.14.tar.gz", hash = "sha256:78f1e4eb72c828a08f37274e76c12bff95374b65dc5ac57a7b0a2eeafae48391"},
+    {file = "types_boto3-1.40.17-py3-none-any.whl", hash = "sha256:2fc0762c41361e254ea538fa4b08e8694b0976b3f527e4e3611d4c7c059bdb09"},
+    {file = "types_boto3-1.40.17.tar.gz", hash = "sha256:8a7015f1e6750e010e8480db800476532f94703d3e59f94c173db5f9d4236c0f"},
 ]
 
 [package.dependencies]
@@ -3738,7 +3739,7 @@ bedrock-data-automation-runtime = ["types-boto3-bedrock-data-automation-runtime 
 bedrock-runtime = ["types-boto3-bedrock-runtime (>=1.40.0,<1.41.0)"]
 billing = ["types-boto3-billing (>=1.40.0,<1.41.0)"]
 billingconductor = ["types-boto3-billingconductor (>=1.40.0,<1.41.0)"]
-boto3 = ["boto3 (==1.40.14)"]
+boto3 = ["boto3 (==1.40.17)"]
 braket = ["types-boto3-braket (>=1.40.0,<1.41.0)"]
 budgets = ["types-boto3-budgets (>=1.40.0,<1.41.0)"]
 ce = ["types-boto3-ce (>=1.40.0,<1.41.0)"]
@@ -4693,4 +4694,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "e5d3f1992fd0ac1b212d70681305f8a75214e1325311cf7ebdf89170ce2f715b"
+content-hash = "9d2e3104c6cfed389a05a88352722cca64fd432271ed5754374b65e2d9b5d5b1"
