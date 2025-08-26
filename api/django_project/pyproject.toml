@@ -72,7 +72,7 @@ psycopg2 = "^2.9.10"
 typing-extensions = "^4.14.1"
 gevent = "^25.5.1"
 pyopenssl = "^25.1.0"
-ruff = "^0.12.9"
+ruff = "^0.12.10"
 types-boto3 = "^1.40.17"
 pre-commit = "^4.3.0"
 openapi-generator-cli = {extras = ["jdk4py"], version = "^7.14.0"}
