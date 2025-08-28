@@ -511,23 +511,23 @@ files = [
 
 [[package]]
 name = "channels"
-version = "4.2.2"
+version = "4.3.1"
 description = "Brings async, event-driven capabilities to Django."
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "channels-4.2.2-py3-none-any.whl", hash = "sha256:ff36a6e1576cacf40bcdc615fa7aece7a709fc4fdd2dc87f2971f4061ffdaa81"},
-    {file = "channels-4.2.2.tar.gz", hash = "sha256:8d7208e48ab8fdb972aaeae8311ce920637d97656ffc7ae5eca4f93f84bcd9a0"},
+    {file = "channels-4.3.1-py3-none-any.whl", hash = "sha256:b091d4b26f91d807de3e84aead7ba785314f27eaf5bac31dd51b1c956b883859"},
+    {file = "channels-4.3.1.tar.gz", hash = "sha256:97413ffd674542db08e16a9ef09cd86ec0113e5f8125fbd33cf0854adcf27cdb"},
 ]
 
 [package.dependencies]
-asgiref = ">=3.6.0,<4"
+asgiref = ">=3.9.0,<4"
 Django = ">=4.2"
 
 [package.extras]
 daphne = ["daphne (>=4.0.0)"]
-tests = ["async-timeout", "coverage (>=4.5,<5.0)", "pytest", "pytest-asyncio", "pytest-django"]
+tests = ["async-timeout", "coverage (>=4.5,<5.0)", "pytest", "pytest-asyncio", "pytest-django", "selenium"]
 
 [[package]]
 name = "channels-redis"
@@ -4695,4 +4695,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "3782acf26395b9e8105d7f7b7669340b165d1642130fb5c9486f9b1f5dcb5338"
+content-hash = "167da365b4595442460f334cfd0984272a9eca15fc261fc2bb670195e0dcc280"
