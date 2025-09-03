@@ -1496,6 +1496,7 @@ files = [
     {file = "gevent-25.8.2-cp314-cp314-win_amd64.whl", hash = "sha256:28a60e5f1174ac568639ab3bd12be9d620478a35acf0ad3156ef117918b4f551"},
     {file = "gevent-25.8.2-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:8a4d24f188cb0bd71096a4037c11aa5674858c00749d3dbf3ec042642d3e9b09"},
     {file = "gevent-25.8.2-cp39-cp39-musllinux_1_2_x86_64.whl", hash = "sha256:6c804b0141222891310d6d15ae172a621183d2d6ecb2f2bd94c6c72af648c622"},
+    {file = "gevent-25.8.2-cp39-cp39-win32.whl", hash = "sha256:59875a8533b103b7bca950bcdbbbc1456484bff1a906b9eceefaf7fd7e297a9e"},
     {file = "gevent-25.8.2-cp39-cp39-win_amd64.whl", hash = "sha256:2969cb688461de0ea04b80aa09b74b3ac18b70372206b27a445c7d727a5956af"},
     {file = "gevent-25.8.2-pp310-pypy310_pp73-macosx_11_0_universal2.whl", hash = "sha256:cf365361ab40435e3c28c7335cdeb7f6f2b9a8ce6eaced01addbba1c83e4f08f"},
     {file = "gevent-25.8.2.tar.gz", hash = "sha256:0cfab118ad5dcc55d7847dd9dccd560d9015fe671f42714b6f1ac97e3b2b9a3a"},
@@ -3676,14 +3677,14 @@ files = [
 
 [[package]]
 name = "types-boto3"
-version = "1.40.19"
-description = "Type annotations for boto3 1.40.19 generated with mypy-boto3-builder 8.11.0"
+version = "1.40.21"
+description = "Type annotations for boto3 1.40.21 generated with mypy-boto3-builder 8.11.0"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "types_boto3-1.40.19-py3-none-any.whl", hash = "sha256:10f37bbef5e174a7065f0934109fe2765e82930421c8890e516a423e49dfe78b"},
-    {file = "types_boto3-1.40.19.tar.gz", hash = "sha256:7b2a0b21db8a79529b297c44689b334f709db68dcbf2a9f9d5d21175a950481a"},
+    {file = "types_boto3-1.40.21-py3-none-any.whl", hash = "sha256:a0be4a19fafc82237ee44f2ba0d625d50eaab08493aa5e2da802c43fdef56f82"},
+    {file = "types_boto3-1.40.21.tar.gz", hash = "sha256:bc2eebe740dc3df720fdd6c8030ea8e541509606823b19eebd85316423610235"},
 ]
 
 [package.dependencies]
@@ -3744,7 +3745,7 @@ bedrock-data-automation-runtime = ["types-boto3-bedrock-data-automation-runtime 
 bedrock-runtime = ["types-boto3-bedrock-runtime (>=1.40.0,<1.41.0)"]
 billing = ["types-boto3-billing (>=1.40.0,<1.41.0)"]
 billingconductor = ["types-boto3-billingconductor (>=1.40.0,<1.41.0)"]
-boto3 = ["boto3 (==1.40.19)"]
+boto3 = ["boto3 (==1.40.21)"]
 braket = ["types-boto3-braket (>=1.40.0,<1.41.0)"]
 budgets = ["types-boto3-budgets (>=1.40.0,<1.41.0)"]
 ce = ["types-boto3-ce (>=1.40.0,<1.41.0)"]
@@ -4697,4 +4698,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "c2126744d73b2f38a05dcfe2b973a0e92e1c201bdb960da9bc19f3fd7c6a3fb9"
+content-hash = "38036beb2d020f2d697605b5a6447a12c4265fc493417cbe75f715bc61b11e13"
