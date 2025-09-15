@@ -229,14 +229,14 @@ tests-mypy = ["mypy (>=1.11.1) ; platform_python_implementation == \"CPython\" a
 
 [[package]]
 name = "auth0-python"
-version = "4.11.0"
+version = "4.12.0"
 description = ""
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "auth0_python-4.11.0-py3-none-any.whl", hash = "sha256:53b1c5e11ab7d59dc566edb7068b2d8c65f855c0fc35f291e0362b2082f3ccf6"},
-    {file = "auth0_python-4.11.0.tar.gz", hash = "sha256:3c60a702256a24e55653907ce8c486f1f4cde8294869b417f713f0bc1d69de1a"},
+    {file = "auth0_python-4.12.0-py3-none-any.whl", hash = "sha256:3a9c13e79ccb93ed26d000ab2cadbba1eb1cfb7724ff008bbdb694437d35ec04"},
+    {file = "auth0_python-4.12.0.tar.gz", hash = "sha256:eb8c91dc5b8b12695affbcb37d74420eab35c91246036c83ed786b7ab9d5f292"},
 ]
 
 [package.dependencies]
@@ -4698,4 +4698,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "1210a8eaa69f226c3e62b2061d4450abf87a7353776bc068660160edbea1f521"
+content-hash = "1c2f4daf6f755df546e1c427fd5610568d648133041191312cd2c7e46b96f0d6"
