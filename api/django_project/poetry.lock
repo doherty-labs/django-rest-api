@@ -1249,14 +1249,14 @@ develop = ["coverage", "elasticsearch[async]", "jinja2", "mypy", "nltk", "pyrigh
 
 [[package]]
 name = "faker"
-version = "37.7.0"
+version = "37.8.0"
 description = "Faker is a Python package that generates fake data for you."
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "faker-37.7.0-py3-none-any.whl", hash = "sha256:8e94fad273e6ac85b507890298d4b1a41eb24faa1db86a2f9060d52e97cfa5cf"},
-    {file = "faker-37.7.0.tar.gz", hash = "sha256:d0bbfa0a48aacaf10bc1079bb8bfc27aff226fc9cc49e3f4d606fa599fc49036"},
+    {file = "faker-37.8.0-py3-none-any.whl", hash = "sha256:b08233118824423b5fc239f7dd51f145e7018082b4164f8da6a9994e1f1ae793"},
+    {file = "faker-37.8.0.tar.gz", hash = "sha256:090bb5abbec2b30949a95ce1ba6b20d1d0ed222883d63483a0d4be4a970d6fb8"},
 ]
 
 [package.dependencies]
@@ -4698,4 +4698,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "aad7a0182019651655a7b508153152d10da0eb9bb8342846fbc91db6dd8795ae"
+content-hash = "1285690ac889aa75c2ec432a668c2b2aa12865ed0cbc55cd386384cb59e841f4"
