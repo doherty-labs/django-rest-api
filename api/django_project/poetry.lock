@@ -3639,19 +3639,22 @@ doc = ["sphinx"]
 
 [[package]]
 name = "stripe"
-version = "13.0.0"
+version = "13.0.1"
 description = "Python bindings for the Stripe API"
 optional = false
 python-versions = ">=3.7"
 groups = ["main"]
 files = [
-    {file = "stripe-13.0.0-py3-none-any.whl", hash = "sha256:045ba733f414e77de36b4086ffad774542750983692b261f85e3389c4cdaa09b"},
-    {file = "stripe-13.0.0.tar.gz", hash = "sha256:2caf0e2e035dc8be38c5c601cad0c16c0be7ed9bf538ae8e2bb70d9b42d5fe6b"},
+    {file = "stripe-13.0.1-py3-none-any.whl", hash = "sha256:7804cee14580ab37bbc1e5f6562e49dea0686ab3cb34384eb9386387ed8ebd0c"},
+    {file = "stripe-13.0.1.tar.gz", hash = "sha256:5869739430ff73bd9cd81275abfb79fd4089e97e9fd98d306a015f5defd39a0d"},
 ]
 
 [package.dependencies]
 requests = {version = ">=2.20", markers = "python_version >= \"3.0\""}
 typing_extensions = {version = ">=4.5.0", markers = "python_version >= \"3.7\""}
+
+[package.extras]
+async = ["httpx"]
 
 [[package]]
 name = "structlog"
@@ -4773,4 +4776,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "5f34240d4403baa67be2417abc2230fa150f266da4095930986ecffee05bad50"
+content-hash = "c003912e6834cf531086acd0a7d31e8cfbbd811c8a9800200de34f5706c3db66"
