@@ -1,4 +1,4 @@
-FROM python:3.13.7
+FROM python:3.14.0
 
 EXPOSE 8000
 ENV DEBIAN_FRONTEND noninteractive
