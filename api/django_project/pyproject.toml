@@ -78,7 +78,7 @@ pre-commit = "^4.3.0"
 openapi-generator-cli = {extras = ["jdk4py"], version = "^7.17.0"}
 shopifyapi = "^12.7.0"
 elasticsearch-dsl = "^8.17.1"
-onepassword-sdk = "^0.3.1"
+onepassword-sdk = "^0.3.2"
 
 [tool.poetry.dev-dependencies]
 
