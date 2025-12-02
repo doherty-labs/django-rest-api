@@ -1939,18 +1939,18 @@ files = [
 
 [[package]]
 name = "injector"
-version = "0.22.0"
+version = "0.23.0"
 description = "Injector - Python dependency injection framework, inspired by Guice"
 optional = false
 python-versions = "*"
 groups = ["main"]
 files = [
-    {file = "injector-0.22.0-py2.py3-none-any.whl", hash = "sha256:74379ccef3b893bc7d0b7d504c255b5160c5a55e97dc7bdcc73cb33cc7dce3a1"},
-    {file = "injector-0.22.0.tar.gz", hash = "sha256:79b2d4a0874c75d3aa735f11c5b32b89d9542711ca07071161882c5e9cc15ed6"},
+    {file = "injector-0.23.0-py2.py3-none-any.whl", hash = "sha256:86ab389805b4aaabfe235b2b2b85ff515af4d0209faccf1d60de2872c92c1fa0"},
+    {file = "injector-0.23.0.tar.gz", hash = "sha256:7e59db84faa5358474c8ee05abca6ab6bd02519fbefcf175e0b230ee7d2d4bac"},
 ]
 
 [package.extras]
-dev = ["black (==24.3.0) ; implementation_name == \"cpython\"", "build (==1.0.3)", "check-manifest (==0.49)", "click (==8.1.7)", "coverage[toml] (==7.3.2)", "exceptiongroup (==1.2.0)", "importlib-metadata (==7.0.0)", "iniconfig (==2.0.0)", "mypy (==1.7.1) ; implementation_name == \"cpython\"", "mypy-extensions (==1.0.0)", "packaging (==23.2)", "pathspec (==0.12.1)", "platformdirs (==4.1.0)", "pluggy (==1.3.0)", "pyproject-hooks (==1.0.0)", "pytest (==7.4.3)", "pytest-cov (==4.1.0)", "tomli (==2.0.1)", "typing-extensions (==4.9.0) ; python_version < \"3.9\"", "zipp (==3.17.0)"]
+dev = ["black (==24.3.0) ; implementation_name == \"cpython\"", "build (==1.0.3)", "check-manifest (==0.49)", "click (==8.1.7)", "coverage[toml] (==7.3.2)", "exceptiongroup (==1.2.0)", "importlib-metadata (==7.0.0)", "iniconfig (==2.0.0)", "mypy (==1.7.1) ; implementation_name == \"cpython\"", "mypy-extensions (==1.0.0)", "packaging (==25.0)", "pathspec (==0.12.1)", "platformdirs (==4.1.0)", "pluggy (==1.3.0)", "pyproject-hooks (==1.0.0)", "pytest (==7.4.3)", "pytest-cov (==4.1.0)", "tomli (==2.0.1)", "typing-extensions (==4.9.0) ; python_version < \"3.9\"", "zipp (==3.19.1)"]
 
 [[package]]
 name = "jdk4py"
@@ -4900,4 +4900,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "be44a9d0f1d3a0abd912ae1d48e1e2bb71eddaecb2970c2d772166581743ac06"
+content-hash = "7a15c22c0579d604404e102f1f430021be02d128e71b4437c2253bd71119518f"
