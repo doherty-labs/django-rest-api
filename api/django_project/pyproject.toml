@@ -73,7 +73,7 @@ typing-extensions = "^4.15.0"
 gevent = "^25.9.1"
 pyopenssl = "^25.3.0"
 ruff = "^0.14.10"
-types-boto3 = "^1.42.13"
+types-boto3 = "^1.42.14"
 pre-commit = "^4.5.1"
 openapi-generator-cli = {extras = ["jdk4py"], version = "^7.17.0"}
 shopifyapi = "^12.7.0"
