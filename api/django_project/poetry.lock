@@ -1964,6 +1964,25 @@ files = [
 ]
 
 [[package]]
+name = "json-logic"
+version = "0.7.0a0"
+description = "Build complex rules, serialize them as JSON, and execute them in Python"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "json_logic-0.7.0a0-py2.py3-none-any.whl", hash = "sha256:a7af2e3673212279b4c7b63d0b0ead5f6b3d89cef8970bdbf60595d3bc9dd819"},
+    {file = "json_logic-0.7.0a0.tar.gz", hash = "sha256:84580b974bcfec7b00d63745f19ca363939fc2b93c579f578d41d7d10c12fe0c"},
+]
+
+[package.dependencies]
+six = "*"
+
+[package.extras]
+dev = ["check-manifest"]
+test = ["coverage"]
+
+[[package]]
 name = "kombu"
 version = "5.6.1"
 description = "Messaging library for Python."
@@ -2088,19 +2107,20 @@ files = [
 
 [[package]]
 name = "mixpanel"
-version = "5.0.0"
+version = "5.1.0"
 description = "Official Mixpanel library for Python"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "mixpanel-5.0.0-py3-none-any.whl", hash = "sha256:5c5fee75a304bd2940828a08a31f74fae7f02d5fe81914a851ed87e8884096ec"},
-    {file = "mixpanel-5.0.0.tar.gz", hash = "sha256:ef78b7b36150fbf24796972bf44871515c6d1381a69be683eb26a65d44b84bb5"},
+    {file = "mixpanel-5.1.0-py3-none-any.whl", hash = "sha256:2e0587a3c581df29279d4f06e13e1edff348ddb34210199ac6fca23f1bb11ca7"},
+    {file = "mixpanel-5.1.0.tar.gz", hash = "sha256:aa7d8f3b49d3e215fcec29f706dfd20cb821257c8f1a923009b62ac23fad357a"},
 ]
 
 [package.dependencies]
 asgiref = ">=3.0.0"
 httpx = ">=0.27.0"
+json-logic = "0.7.0a0"
 pydantic = ">=2.0.0"
 requests = ">=2.4.2,<3"
 
@@ -4883,4 +4903,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "10a728e1a574e705c4888d6686727e8d81ea7675cab586569ec6b8d765fa3e07"
+content-hash = "ae90a637b52bdabe38053cc05968bb37d318720f93ce81f9887816c6685e074a"
