@@ -1923,14 +1923,14 @@ files = [
 
 [[package]]
 name = "injector"
-version = "0.23.0"
+version = "0.24.0"
 description = "Injector - Python dependency injection framework, inspired by Guice"
 optional = false
 python-versions = "*"
 groups = ["main"]
 files = [
-    {file = "injector-0.23.0-py2.py3-none-any.whl", hash = "sha256:86ab389805b4aaabfe235b2b2b85ff515af4d0209faccf1d60de2872c92c1fa0"},
-    {file = "injector-0.23.0.tar.gz", hash = "sha256:7e59db84faa5358474c8ee05abca6ab6bd02519fbefcf175e0b230ee7d2d4bac"},
+    {file = "injector-0.24.0-py3-none-any.whl", hash = "sha256:47294c7a7fdb811f0d1b442a1e0152bb2fc28b2ccaaba4cba44e5e125e0da2d0"},
+    {file = "injector-0.24.0.tar.gz", hash = "sha256:e85a75d1516cff2f03170f3fd1219f56acb25c9a05e307819ae0dcde3dad3d3f"},
 ]
 
 [package.extras]
@@ -4903,4 +4903,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "795f98e56ec2412a912ab666c92138dd5249b63bec18722b42bd8ce3d85959f4"
+content-hash = "6676eaf915e299280578e0c307a5afd806a2c7aa52ff2f01767e96973286c225"
