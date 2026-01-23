@@ -3843,14 +3843,14 @@ test = ["pytest"]
 
 [[package]]
 name = "twilio"
-version = "9.9.1"
+version = "9.10.0"
 description = "Twilio API client and TwiML generator"
 optional = false
 python-versions = ">=3.7.0"
 groups = ["main"]
 files = [
-    {file = "twilio-9.9.1-py2.py3-none-any.whl", hash = "sha256:b4a8b0ef241d7f87f5ea0915b76e50bf2d2ff73a3c67604664bfac09cb1047a7"},
-    {file = "twilio-9.9.1.tar.gz", hash = "sha256:0ddf56092d2f613a3da56355eb4a0b39fc7c8ef10f1e073f558fab3e4b6c957b"},
+    {file = "twilio-9.10.0-py2.py3-none-any.whl", hash = "sha256:4de70b1437b21912737b6ce2727b71c1512d16d4155d35cefe31a4b515dbf70d"},
+    {file = "twilio-9.10.0.tar.gz", hash = "sha256:140d23fb4e74b3915c1af7847f862e02310866ec14247a9074cd37a9e5ccbdf1"},
 ]
 
 [package.dependencies]
@@ -4913,4 +4913,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "5bbf69355674611eb8bb58dffd528b3cdfd0b764e9e6a90628edcc064995f65a"
+content-hash = "17254bd361f97def165da42f0cb814d7c064d10a2062149502c92bf05f4639ad"
