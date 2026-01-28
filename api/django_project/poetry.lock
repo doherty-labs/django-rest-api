@@ -1131,24 +1131,22 @@ drf = ["djangorestframework"]
 
 [[package]]
 name = "django-money"
-version = "3.5.4"
+version = "3.6.0"
 description = "Adds support for using money and currency fields in django models and forms. Uses py-moneyed as the money implementation."
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "django_money-3.5.4-py3-none-any.whl", hash = "sha256:628b3afb6671edc2cbd26743d858c31d3b99a735357f7acb6a399ab3ab008d2b"},
-    {file = "django_money-3.5.4.tar.gz", hash = "sha256:25933ed6177f8dc981114db813c7c5d36c7c89bc4017f2b1b2bb0209b5f68876"},
+    {file = "django_money-3.6.0-py3-none-any.whl", hash = "sha256:a8d249bf3ce6ad7fb953530c920cc85ea7f1137c0fde747a74204ea24ec97ab1"},
+    {file = "django_money-3.6.0.tar.gz", hash = "sha256:94402f2831f2726b94ef2da35b4059441b4c0aedfc47b312472200d4ffdf8d73"},
 ]
 
 [package.dependencies]
-Django = ">=2.2"
+Django = ">=4.2"
 py-moneyed = ">=2.0,<3.1"
-setuptools = "*"
 
 [package.extras]
 exchange = ["certifi"]
-test = ["django-stubs", "mixer", "mypy", "pytest (>=8.2,<8.3)", "pytest-cov", "pytest-django"]
 
 [[package]]
 name = "django-storages"
@@ -4913,4 +4911,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "c333303f0423e3548159d2ee24541e32a14f3e37981f1bc592f901dfff8800b7"
+content-hash = "f8cbcd14e2e9e1311ccfd396a38f97c5ac99a095bcc8bf81a0743dbb82ad8764"
