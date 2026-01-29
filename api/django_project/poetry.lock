@@ -3749,14 +3749,14 @@ doc = ["sphinx"]
 
 [[package]]
 name = "stripe"
-version = "14.2.0"
+version = "14.3.0"
 description = "Python bindings for the Stripe API"
 optional = false
 python-versions = ">=3.7"
 groups = ["main"]
 files = [
-    {file = "stripe-14.2.0-py3-none-any.whl", hash = "sha256:0a1413ca5eff55df40de49f72f4e17ad51e684600b7876a330ba012e9caae689"},
-    {file = "stripe-14.2.0.tar.gz", hash = "sha256:9c707cb0503e179c2d9f18731e94f1333705b5cd9dcaae692db09995ad28d411"},
+    {file = "stripe-14.3.0-py3-none-any.whl", hash = "sha256:3e36b68b256c8970e99b703e195d947e2a2919095758788c7074ac4485ac255e"},
+    {file = "stripe-14.3.0.tar.gz", hash = "sha256:4c76137d741bd43e8bb433a596c198ca20f4cdf17a8fe04604faf37c74b01978"},
 ]
 
 [package.dependencies]
@@ -4906,4 +4906,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "149e965f02e607f67e62cc58a03b8722a83b97602ad353e68535ecc00e57d0f1"
+content-hash = "7044fde4ee9cc8293cd3f70a8e71ddf8e3a234f6d3696e0f0d7e3276652730c6"
