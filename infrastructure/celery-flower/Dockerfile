@@ -1,4 +1,4 @@
-FROM python:3.14.2
+FROM python:3.15.0a5
 EXPOSE 5555
 
 ENV DEBIAN_FRONTEND noninteractive
