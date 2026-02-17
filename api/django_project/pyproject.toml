@@ -75,7 +75,7 @@ pyopenssl = "^25.3.0"
 ruff = "^0.15.1"
 types-boto3 = "^1.42.50"
 pre-commit = "^4.5.1"
-openapi-generator-cli = {extras = ["jdk4py"], version = "^7.19.0"}
+openapi-generator-cli = {extras = ["jdk4py"], version = "^7.20.0"}
 shopifyapi = "^12.7.0"
 elasticsearch-dsl = "^8.17.1"
 onepassword-sdk = "^0.4.0"
