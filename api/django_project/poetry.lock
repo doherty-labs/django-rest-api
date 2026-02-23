@@ -2797,14 +2797,14 @@ testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
 name = "polyfactory"
-version = "3.2.0"
+version = "3.3.0"
 description = "Mock data generation factories"
 optional = false
 python-versions = "<4.0,>=3.9"
 groups = ["main"]
 files = [
-    {file = "polyfactory-3.2.0-py3-none-any.whl", hash = "sha256:5945799cce4c56cd44ccad96fb0352996914553cc3efaa5a286930599f569571"},
-    {file = "polyfactory-3.2.0.tar.gz", hash = "sha256:879242f55208f023eee1de48522de5cb1f9fd2d09b2314e999a9592829d596d1"},
+    {file = "polyfactory-3.3.0-py3-none-any.whl", hash = "sha256:686abcaa761930d3df87b91e95b26b8d8cb9fdbbbe0b03d5f918acff5c72606e"},
+    {file = "polyfactory-3.3.0.tar.gz", hash = "sha256:237258b6ff43edf362ffd1f68086bb796466f786adfa002b0ac256dbf2246e9a"},
 ]
 
 [package.dependencies]
@@ -4920,4 +4920,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "4c8b913067dff1953df7dd1dfbf4d8687df88676e0b432af7e734ac6a61618d3"
+content-hash = "2caa47988656ada9d0909b277b8d17ddbc194a479eb4d3351bf8edcf33f92ebe"
