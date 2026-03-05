@@ -77,7 +77,7 @@ jobs:
         run: doctl registry login
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: ${{ steps.op-load-secret.outputs.DOCKER_REG_URL }}/${{ steps.op-load-secret.outputs.DOCKER_REG_NAME }}/${{ matrix.tag }}
           tags: |
