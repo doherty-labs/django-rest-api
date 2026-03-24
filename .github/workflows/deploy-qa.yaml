@@ -208,7 +208,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: qa
     steps:
-      - uses: azure/setup-helm@v4.3.1
+      - uses: azure/setup-helm@v5.0.0
       - uses: actions/checkout@v6
       - uses: 1password/load-secrets-action/configure@v4
         with:
