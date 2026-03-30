@@ -232,79 +232,79 @@ jobs:
       - name: Save DigitalOcean kubeconfig with short-lived credentials
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 3600 ${{ steps.op-load-secret.outputs.CLUSTER_NAME }}
       - name: Replace reg url
-        uses: richardrigutins/replace-in-files@v2
+        uses: richardrigutins/replace-in-files@v3
         with:
           files: "./infrastructure/helm-values.yaml"
           search-text: "${DOCKER_REG_URL}"
           replacement-text: ${{ steps.op-load-secret.outputs.DOCKER_REG_URL }}
       - name: Replace reg name
-        uses: richardrigutins/replace-in-files@v2
+        uses: richardrigutins/replace-in-files@v3
         with:
           files: "./infrastructure/helm-values.yaml"
           search-text: "${DOCKER_REG_NAME}"
           replacement-text: ${{ steps.op-load-secret.outputs.DOCKER_REG_NAME }}
       - name: Replace sha version
-        uses: richardrigutins/replace-in-files@v2
+        uses: richardrigutins/replace-in-files@v3
         with:
           files: "./infrastructure/helm-values.yaml"
           search-text: "${SHA_VERSION}"
           replacement-text: ${{ steps.vars.outputs.sha_short }}
       - name: Replace django settings module
-        uses: richardrigutins/replace-in-files@v2
+        uses: richardrigutins/replace-in-files@v3
         with:
           files: "./infrastructure/helm-values.yaml"
           search-text: "${DJANGO_SETTINGS_MODULE}"
           replacement-text: "django_project.settings_qa"
       - name: Replace rest api image name
-        uses: richardrigutins/replace-in-files@v2
+        uses: richardrigutins/replace-in-files@v3
         with:
           files: "./infrastructure/helm-values.yaml"
           search-text: "${REST_API_IMAGE_NAME}"
           replacement-text: "qa-rest-api"
       - name: Replace celery scheduler image name
-        uses: richardrigutins/replace-in-files@v2
+        uses: richardrigutins/replace-in-files@v3
         with:
           files: "./infrastructure/helm-values.yaml"
           search-text: "${CELERY_SCHEDULER_IMAGE_NAME}"
           replacement-text: "qa-celery-scheduler"
       - name: Replace celery flower image name
-        uses: richardrigutins/replace-in-files@v2
+        uses: richardrigutins/replace-in-files@v3
         with:
           files: "./infrastructure/helm-values.yaml"
           search-text: "${FLOWER_IMAGE_NAME}"
           replacement-text: "qa-celery-flower"
       - name: Replace celery worker image name
-        uses: richardrigutins/replace-in-files@v2
+        uses: richardrigutins/replace-in-files@v3
         with:
           files: "./infrastructure/helm-values.yaml"
           search-text: "${CELERY_WORKER_IMAGE_NAME}"
           replacement-text: "qa-celery-worker"
       - name: Replace API hostname
-        uses: richardrigutins/replace-in-files@v2
+        uses: richardrigutins/replace-in-files@v3
         with:
           files: "./infrastructure/helm-values.yaml"
           search-text: "${REST_API_HOSTNAME}"
           replacement-text: "qa-api.xxxxx.com"
       - name: Replace flower hostname
-        uses: richardrigutins/replace-in-files@v2
+        uses: richardrigutins/replace-in-files@v3
         with:
           files: "./infrastructure/helm-values.yaml"
           search-text: "${FLOWER_HOSTNAME}"
           replacement-text: "qa-flower.xxxx.com"
       - name: Replace landing image
-        uses: richardrigutins/replace-in-files@v2
+        uses: richardrigutins/replace-in-files@v3
         with:
           files: "./infrastructure/helm-values.yaml"
           search-text: "${LANDING_IMAGE_NAME}"
           replacement-text: "qa-landing"
       - name: Replace landing host
-        uses: richardrigutins/replace-in-files@v2
+        uses: richardrigutins/replace-in-files@v3
         with:
           files: "./infrastructure/helm-values.yaml"
           search-text: "${LANDING_HOSTNAME}"
           replacement-text: "qa-landing.xxxx.com"
       - name: Replace env
-        uses: richardrigutins/replace-in-files@v2
+        uses: richardrigutins/replace-in-files@v3
         with:
           files: "./infrastructure/helm-values.yaml"
           search-text: "${ENV}"
